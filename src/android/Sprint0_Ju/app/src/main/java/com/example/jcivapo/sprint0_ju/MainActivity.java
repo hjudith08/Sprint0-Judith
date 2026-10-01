@@ -80,11 +80,36 @@ public class MainActivity extends AppCompatActivity {
             solicitarPermisosBluetooth();
         }
 
+        // Prueba temporal de la lógica fake
+        probarLogicaFake();
 
         Log.d(
                 ETIQUETA_LOG,
                 "onCreate(): termina"
         );
+    }
+
+    // ----------------------------------------------------
+    // Probar logica fake
+    // ----------------------------------------------------
+
+
+    private void probarLogicaFake() {
+
+        LogicaFake logicaFake =
+                new LogicaFake();
+
+        MedicionEntrada medicion =
+                logicaFake.obtenerMedicionFake();
+
+        Log.d(
+                ETIQUETA_LOG,
+                "MEDICION FAKE -> tipo="
+                        + medicion.getTipo()
+                        + " valor="
+                        + medicion.getValor()
+        );
+
     }
 
 
