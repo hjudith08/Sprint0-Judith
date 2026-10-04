@@ -4,6 +4,12 @@ package com.example.jcivapo.sprint0_ju;
 // MainActivity.java
 // Adaptación del código proporcionado por el profesor
 // para versiones actuales de Android.
+//
+// Sprint 0:
+// - Escaneo BLE
+// - Lectura de iBeacon
+// - Lógica fake
+// - Envío de medición al servidor REST
 // ----------------------------------------------------
 
 import android.Manifest;
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String ETIQUETA_LOG = ">>>>";
 
+    private static final String ETIQUETA_SPRINT0 = "SPRINT0";
+
     private static final int CODIGO_PETICION_PERMISOS = 100;
 
     private static final String NOMBRE_BEACON = "JU-GTI";
@@ -66,22 +74,39 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+
         Log.d(
                 ETIQUETA_LOG,
                 "onCreate(): empieza"
         );
 
 
+        // ----------------------------------------------------
+        // Inicializar Bluetooth
+        // ----------------------------------------------------
+
         inicializarBluetooth();
 
+
+        // ----------------------------------------------------
+        // Solicitar permisos Bluetooth si hacen falta
+        // ----------------------------------------------------
 
         if (!tenemosPermisosBluetooth()) {
 
             solicitarPermisosBluetooth();
         }
 
-        // Prueba temporal de la lógica fake
-        probarLogicaFake();
+
+        // ----------------------------------------------------
+        // PRUEBA SPRINT 0
+        //
+        // Obtener medición de la lógica fake y enviarla
+        // automáticamente al servidor REST.
+        // ----------------------------------------------------
+
+        enviarMedicionFakeAlREST();
+
 
         Log.d(
                 ETIQUETA_LOG,
@@ -89,27 +114,70 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+
     // ----------------------------------------------------
-    // Probar logica fake
+    // Enviar medición fake al REST
     // ----------------------------------------------------
 
+    private void enviarMedicionFakeAlREST() {
 
-    private void probarLogicaFake() {
+        Log.d(
+                ETIQUETA_SPRINT0,
+                "Preparando medición fake"
+        );
 
+
+        // Obtener la medición ficticia
         LogicaFake logicaFake =
                 new LogicaFake();
 
-        MedicionEntrada medicion =
+
+        MedicionEntrada medicionFake =
                 logicaFake.obtenerMedicionFake();
 
+
         Log.d(
-                ETIQUETA_LOG,
+                ETIQUETA_SPRINT0,
                 "MEDICION FAKE -> tipo="
-                        + medicion.getTipo()
+                        + medicionFake.getTipo()
                         + " valor="
-                        + medicion.getValor()
+                        + medicionFake.getValor()
         );
 
+
+        // Crear peticionario REST
+        PeticionarioREST peticionarioREST =
+                new PeticionarioREST();
+
+
+        // Enviar medición
+        peticionarioREST.enviarMedicion(
+                medicionFake,
+
+                (exito, mensaje) -> {
+
+                    Log.d(
+                            ETIQUETA_SPRINT0,
+                            "RESPUESTA REST -> exito="
+                                    + exito
+                                    + " mensaje="
+                                    + mensaje
+                    );
+
+
+                    // Mostrar también resultado en pantalla
+                    // para poder comprobarlo aunque Logcat
+                    // no esté mostrando los mensajes.
+                    Toast.makeText(
+                            MainActivity.this,
+                            "REST: "
+                                    + exito
+                                    + " - "
+                                    + mensaje,
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+        );
     }
 
 
@@ -154,11 +222,13 @@ public class MainActivity extends AppCompatActivity {
                     "Este dispositivo no dispone de Bluetooth"
             );
 
+
             Toast.makeText(
                     this,
                     "Este dispositivo no dispone de Bluetooth",
                     Toast.LENGTH_LONG
             ).show();
+
 
             return;
         }
@@ -265,11 +335,13 @@ public class MainActivity extends AppCompatActivity {
 
             solicitarPermisosBluetooth();
 
+
             Toast.makeText(
                     this,
                     "Debes conceder los permisos Bluetooth",
                     Toast.LENGTH_SHORT
             ).show();
+
 
             return false;
         }
@@ -427,7 +499,6 @@ public class MainActivity extends AppCompatActivity {
         crearCallbackEscaneo();
 
 
-        // Filtro por nombre
         ScanFilter filtro =
                 new ScanFilter.Builder()
                         .setDeviceName(
@@ -583,8 +654,6 @@ public class MainActivity extends AppCompatActivity {
                 resultado.getRssi();
 
 
-        // Necesario para poder utilizar
-        // getName() y getAddress() en Android 12+
         if (
                 Build.VERSION.SDK_INT
                         >= Build.VERSION_CODES.S
