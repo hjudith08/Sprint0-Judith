@@ -1,0 +1,53 @@
+<!-- src/web/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Última medición</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <section class="tarjeta">
+
+            <h1>Última medición</h1>
+
+            <div class="dato">
+                <span class="etiqueta">Fecha:</span>
+                <span id="fecha">-</span>
+            </div>
+
+            <div class="dato">
+                <span class="etiqueta">Tipo:</span>
+                <span id="tipo">-</span>
+            </div>
+
+            <div class="dato">
+                <span class="etiqueta">Valor:</span>
+                <span id="valor">-</span>
+            </div>
+
+            <p id="mensaje"></p>
+
+            <button id="botonActualizar">
+                Actualizar
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/LogicaFake.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
