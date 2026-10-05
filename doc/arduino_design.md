@@ -2,15 +2,108 @@
 
 ## 1. Diseño del Componente
 
-<!-- Diseño técnico del componente según context/Software_Engineering_Spec.md -->
+El componente `arduino` genera la medición ficticia requerida por el Sprint 0 y la publica mediante un iBeacon BLE desde la SparkFun Pro nRF52840 Mini.
+
+El flujo funcional es:
+
+```text
+valor O3 ficticio = 1234
+        |
+        v
+Publicador.publicarO3()
+        |
+        | major = (O3 << 8) | contador
+        | minor = 1234
+        v
+EmisoraBLE.emitirAnuncioIBeacon()
+        |
+        v
+iBeacon JU-GTI
+```
+
+### Tipos utilizados
+
+```text
+N = número natural
+Z = número entero
+B = booleano
+Text = texto
+
+MedicionesID = { O3, TEMPERATURA, RUIDO }
+```
+
+### Publicador
+
+```text
+                 -------- Publicador ----------------
+                 |
+                 | beaconUUID: [ N ]_16
+                 | RSSI: Z
+                 |
+                 |
+            encenderEmisora() -->
+                 |
+                 |
+valorO3: Z,      |
+contador: N,  --> publicarO3() -->
+tiempoEspera: N  |
+                 |
+                 -------------------------------------
+```
+
+Responsabilidad:
+
+- codificar el identificador de O3 y el contador en `major`;
+- colocar el valor de la medición en `minor`;
+- ordenar a `EmisoraBLE` la publicación del iBeacon.
+
+Para O3:
+
+```text
+major = (11 << 8) | contador
+minor = valorO3
+```
+
+### Programa principal
+
+```text
+setup()
+  |
+  v
+encender emisora BLE
+  |
+  v
+loop()
+  |
+  +--> incrementar contador
+  |
+  +--> valorO3 = 1234
+  |
+  +--> publicarO3(valorO3, contador, intervalo)
+  |
+  v
+repetir
+```
+
+La medida ficticia nace en `HolaMundoIBeacon.ino`, como exige el test funcional del Sprint 0.
+
+### Infraestructura reutilizada
+
+`EmisoraBLE`, `LED`, `PuertoSerie` y `ServicioEnEmisora` proceden de la base docente y se reutilizan como infraestructura. `Medidor` queda preparado para una futura lectura analógica del ULPSM-O3, pero la medición física no forma parte del test funcional de este Sprint 0.
 
 ## 2. Aclaraciones del Diseño
 
-<!-- Solo si es necesario: decisiones de diseño o matices -->
+- El nombre anunciado por BLE es `JU-GTI`.
+- El UUID utilizado es `EPSG-GTI-PROY-3A` codificado en 16 bytes.
+- El identificador lógico de O3 es `11`.
+- `major` transporta el tipo de medición en el byte alto y el contador en el byte bajo.
+- `minor` transporta el valor ficticio `1234`.
+- El contador permite al cliente Android distinguir una medición nueva de anuncios repetidos del mismo iBeacon.
+- La lectura analógica real del sensor no se utiliza para el criterio de aceptación del Sprint 0.
 
 ## 3. Reglas Generales
 
-- **Lenguaje de programación:** <!-- indicar -->
-- **Encabezados de funciones/métodos:** cada función o método incluye su diseño lógico en un bloque de comentarios delimitado por líneas `--------------------`.
-- **Legibilidad del código:** el código debe ser lo más claro y autoexplicativo posible, sin apenas comentarios adicionales.
-- **Pruebas automatizadas:** se generan pruebas unitarias o de integración para todas las funciones y métodos clave.
+- **Lenguaje de programación:** C++ para Arduino.
+- **Encabezados de funciones/métodos:** cada función o método propio del Sprint incluye su diseño lógico en un bloque de comentarios delimitado por líneas `--------------------`.
+- **Legibilidad del código:** se conserva el código docente y se realizan únicamente las adaptaciones necesarias para el Sprint 0.
+- **Pruebas automatizadas:** las partes puramente hardware/BLE se validan mediante el test funcional de integración; la cadena posterior dispone de tests automáticos en Android, REST, lógica y web.
