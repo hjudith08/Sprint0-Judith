@@ -1,15 +1,15 @@
 // -*-c++-*-
 
 // --------------------------------------------------------------
-//
-// Jordi Bataller i Mascarell
-// 2019-07-07
-//
+// Fichero: HolaMundoIBeacon.ino
+// Descripción: Programa principal del Sprint 0. Emite por iBeacon
+//              una medición ficticia de O3 para validar la cadena
+//              Arduino -> Android -> REST -> BD -> Web.
+// Copyright:  material académico y modificaciones del autor.
+// Fecha de adaptación: 2026-10-05
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: integración de O3 ficticio, contador y publicación BLE.
 // --------------------------------------------------------------
-
-// https://learn.sparkfun.com/tutorials/nrf52840-development-with-arduino-and-circuitpython
-
-// https://stackoverflow.com/questions/29246805/can-an-ibeacon-have-a-data-payload
 
 // --------------------------------------------------------------
 // --------------------------------------------------------------
@@ -133,14 +133,17 @@ void loop () {
 
   // lucecitas();
 
-  // 
-  // mido y publico
-  // 
-  int valorO3 = elMedidor.medirO3();
+  // ------------------------------------------------------------
+  // valorO3: Z --> publicar medición ficticia de Sprint 0
+  //
+  // La rúbrica exige que el valor ficticio nazca en el código
+  // de la placa. El minor del iBeacon transporta este 1234.
+  // ------------------------------------------------------------
+  int valorO3 = 1234;
 
-  elPuerto.escribir( "O3 medido = " );
+  elPuerto.escribir( "O3 ficticio = " );
   elPuerto.escribir( valorO3 );
-  elPuerto.escribir( " ppm\n" );
+  elPuerto.escribir( "\n" );
   
   elPublicador.publicarO3( valorO3,
 							cont,
