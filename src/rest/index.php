@@ -1,5 +1,15 @@
 <?php
 
+// --------------------------------------------------------------
+// Fichero: index.php
+// Descripción: API REST del Sprint 0 para almacenar mediciones y consultar la última
+//              medición registrada.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: implementación de POST /mediciones, GET /mediciones/ultima y validación de
+//             entrada.
+// --------------------------------------------------------------
 require_once __DIR__ . '/../logica/LogicaNegocio.php';
 
 header(
@@ -189,6 +199,32 @@ try {
                     'exito' => false,
                     'mensaje'
                         => 'Falta el campo valor'
+                ],
+                400
+            );
+        }
+
+
+        if (!is_string($datos['tipo'])) {
+
+            responderJSON(
+                [
+                    'exito' => false,
+                    'mensaje'
+                        => 'El campo tipo debe ser texto'
+                ],
+                400
+            );
+        }
+
+
+        if (!is_numeric($datos['valor'])) {
+
+            responderJSON(
+                [
+                    'exito' => false,
+                    'mensaje'
+                        => 'El campo valor debe ser numérico'
                 ],
                 400
             );

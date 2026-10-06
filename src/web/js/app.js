@@ -1,3 +1,12 @@
+// --------------------------------------------------------------
+// Fichero: app.js
+// Descripción: Controlador de la interfaz web que carga, representa y actualiza la última
+//              medición.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: carga inicial, actualización manual y gestión visual de errores.
+// --------------------------------------------------------------
 // src/web/js/app.js
 
 
