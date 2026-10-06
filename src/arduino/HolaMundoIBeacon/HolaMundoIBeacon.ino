@@ -1,30 +1,37 @@
 // -*-c++-*-
 
+
 // --------------------------------------------------------------
 // Fichero: HolaMundoIBeacon.ino
-// Descripción: Programa principal del Sprint 0. Emite por iBeacon
-//              una medición ficticia de O3 para validar la cadena
-//              Arduino -> Android -> REST -> BD -> Web.
-// Copyright:  material académico y modificaciones del autor.
-// Fecha de adaptación: 2026-10-05
+// Descripción: Programa principal del Sprint 0. Emite por iBeacon una medición ficticia de
+//              O3 para validar la cadena Arduino -> Android -> REST -> BD -> Web.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
 // Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell en fecha 2019-07-07
 // Aportación: integración de O3 ficticio, contador y publicación BLE.
 // --------------------------------------------------------------
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
+// https://learn.sparkfun.com/tutorials/nrf52840-development-with-arduino-and-circuitpython
 
+// https://stackoverflow.com/questions/29246805/can-an-ibeacon-have-a-data-payload
+
+// --------------------------------------------------------------
+// Librería principal de Bluetooth Low Energy.
+// --------------------------------------------------------------
 #include <bluefruit.h>
 
 #undef min // vaya tela, están definidos en bluefruit.h y  !
 #undef max // colisionan con los de la biblioteca estándar
 
 // --------------------------------------------------------------
+// Clases auxiliares utilizadas por el programa principal.
 // --------------------------------------------------------------
 #include "LED.h"
 #include "PuertoSerie.h"
 
 // --------------------------------------------------------------
+// Objetos globales compartidos por setup() y loop().
 // --------------------------------------------------------------
 namespace Globales {
   
@@ -36,6 +43,7 @@ namespace Globales {
 };
 
 // --------------------------------------------------------------
+// Clases responsables de la emisión BLE y publicación iBeacon.
 // --------------------------------------------------------------
 #include "EmisoraBLE.h"
 #include "Publicador.h"
@@ -43,6 +51,7 @@ namespace Globales {
 
 
 // --------------------------------------------------------------
+// Objetos globales compartidos por setup() y loop().
 // --------------------------------------------------------------
 namespace Globales {
 
@@ -52,52 +61,52 @@ namespace Globales {
 
 }; // namespace
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
+// ------------------------------------------------------------
+// inicializarPlaquita()
+//
+// Inicializa los elementos básicos utilizados por la placa.
+// ------------------------------------------------------------
 void inicializarPlaquita () {
 
   // de momento nada
 
 } // ()
 
-// --------------------------------------------------------------
+// ------------------------------------------------------------
 // setup()
-// --------------------------------------------------------------
+//
+// Inicializa el puerto serie, la emisora BLE y el medidor antes de comenzar el programa.
+// ------------------------------------------------------------
 void setup() {
 
   Globales::elPuerto.esperarDisponible();
 
-  // 
-  // 
-  // 
+  // Inicializar los componentes básicos de la placa.
   inicializarPlaquita();
 
   // Suspend Loop() to save power
   // suspendLoop();
 
-  // 
-  // 
-  // 
+  // Encender la emisora BLE.
   Globales::elPublicador.encenderEmisora();
 
   // Globales::elPublicador.laEmisora.pruebaEmision();
   
-  // 
-  // 
-  // 
+  // Preparar el ADC y las entradas del medidor.
   Globales::elMedidor.iniciarMedidor();
 
-  // 
-  // 
-  // 
+  // Dar un pequeño margen antes de comenzar el bucle principal.
   esperar( 1000 );
 
   Globales::elPuerto.escribir( "---- setup(): fin ---- \n " );
 
 } // setup ()
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
+// ------------------------------------------------------------
+// lucecitas()
+//
+// Hace parpadear el LED para indicar visualmente que la placa sigue ejecutándose.
+// ------------------------------------------------------------
 inline void lucecitas() {
   using namespace Globales;
 
@@ -111,15 +120,20 @@ inline void lucecitas() {
   esperar ( 1000 ); //  100 apagado
 } // ()
 
-// --------------------------------------------------------------
-// loop ()
-// --------------------------------------------------------------
+// ------------------------------------------------------------
+// Estado utilizado por loop().
+//
+// Mantiene el contador que identifica cada nueva medición publicada.
+// ------------------------------------------------------------
 namespace Loop {
   uint8_t cont = 0;
 };
 
-// ..............................................................
-// ..............................................................
+// ------------------------------------------------------------
+// loop()
+//
+// Genera la medición ficticia de O3, incrementa el contador y publica el iBeacon.
+// ------------------------------------------------------------
 void loop () {
 
   using namespace Loop;

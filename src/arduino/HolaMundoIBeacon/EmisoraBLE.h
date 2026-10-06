@@ -1,9 +1,17 @@
 // -*- mode: c++ -*-
 
-// ----------------------------------------------------------
-// Jordi Bataller i Mascarell
-// 2019-07-07
-// ----------------------------------------------------------
+
+// --------------------------------------------------------------
+// Fichero: EmisoraBLE.h
+// Descripción: Clase de apoyo para configurar y emitir anuncios BLE e iBeacon con la placa
+//              nRF52840.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell en fecha 2019-07-07
+// Aportación: integración del código docente de emisión BLE en el Sprint 0.
+// --------------------------------------------------------------
+
 #ifndef EMISORA_H_INCLUIDO
 #define EMISORA_H_INCLUIDO
 
@@ -16,12 +24,14 @@
 // https://os.mbed.com/blog/entry/BLE-Beacons-URIBeacon-AltBeacons-iBeacon/
 // https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/bleadvertising
 
-// ----------------------------------------------------------
-// ----------------------------------------------------------
+// ------------------------------------------------------------
+// Servicio BLE auxiliar utilizado para registrar servicios y características.
+// ------------------------------------------------------------
 #include "ServicioEnEmisora.h"
 
-// ----------------------------------------------------------
-// ----------------------------------------------------------
+// ------------------------------------------------------------
+// Clase EmisoraBLE: configura Bluefruit y gestiona anuncios BLE/iBeacon.
+// ------------------------------------------------------------
 class EmisoraBLE {
 private:
 
@@ -31,13 +41,20 @@ private:
 
 public:
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // Tipos de callback de conexión
+  //
+  // Definen las funciones que se ejecutan al conectar o desconectar
+  // un dispositivo de la emisora BLE.
+  // ------------------------------------------------------------
   using CallbackConexionEstablecida = void ( uint16_t connHandle );
   using CallbackConexionTerminada = void ( uint16_t connHandle, uint8_t reason);
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // EmisoraBLE()
+  //
+  // Guarda el nombre, fabricante y potencia de transmisión que utilizará la emisora BLE.
+  // ------------------------------------------------------------
   EmisoraBLE( const char * nombreEmisora_, const uint16_t fabricanteID_,
 			  const int8_t txPower_ ) 
 	:
@@ -52,8 +69,12 @@ public:
 	// por tanto NO_encenderEmisora();
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // Constructor alternativo no utilizado
+  //
+  // Se conserva como referencia del código docente, pero permanece
+  // comentado porque los callbacks se instalan después de encender.
+  // ------------------------------------------------------------
   /* creo que no me sirve esta versión porque parece
 	 que no se instalen los callbacks si la emisora no está encendida,
 	 pero no la puedo encender en el constructor 
@@ -70,8 +91,11 @@ public:
   } // ()
   */
 	
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // encenderEmisora()
+  //
+  // Inicializa Bluefruit y detiene cualquier anuncio previo para comenzar desde un estado conocido.
+  // ------------------------------------------------------------
   void encenderEmisora() {
 	// Serial.println ( "Bluefruit.begin() " );
 	 Bluefruit.begin(); 
@@ -80,8 +104,11 @@ public:
 	 (*this).detenerAnuncio();
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // encenderEmisora()
+  //
+  // Enciende la emisora e instala los callbacks de conexión y desconexión recibidos.
+  // ------------------------------------------------------------
   void encenderEmisora( CallbackConexionEstablecida cbce,
 						CallbackConexionTerminada cbct ) {
 
@@ -92,8 +119,11 @@ public:
 
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // detenerAnuncio()
+  //
+  // Detiene el advertising BLE si en ese momento existe un anuncio activo.
+  // ------------------------------------------------------------
   void detenerAnuncio() {
 
 	if ( (*this).estaAnunciando() ) {
@@ -110,8 +140,11 @@ public:
 	return Bluefruit.Advertising.isRunning();
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // emitirAnuncioIBeacon()
+  //
+  // Construye un iBeacon con UUID, major, minor y RSSI y lo anuncia de forma indefinida.
+  // ------------------------------------------------------------
   void emitirAnuncioIBeacon( uint8_t * beaconUUID, int16_t major, int16_t minor, uint8_t rssi ) {
 
 	//
@@ -265,8 +298,11 @@ public:
 	Globales::elPuerto.escribir( "emitiriBeacon libre  Bluefruit.Advertising.start( 0 );  \n");
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // anyadirServicio()
+  //
+  // Añade un servicio BLE a la emisora y lo deja preparado para su uso.
+  // ------------------------------------------------------------
   bool anyadirServicio( ServicioEnEmisora & servicio ) {
 
 	Globales::elPuerto.escribir( " Bluefruit.Advertising.addService( servicio ); \n");
@@ -284,8 +320,11 @@ public:
   } // ()
 
   
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // anyadirServicioConSusCaracteristicas()
+  //
+  // Añade un servicio BLE junto con las características que contiene.
+  // ------------------------------------------------------------
   bool anyadirServicioConSusCaracteristicas( ServicioEnEmisora & servicio ) { 
 	return (*this).anyadirServicio( servicio );
   } // 
@@ -316,20 +355,29 @@ public:
 	
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // instalarCallbackConexionEstablecida()
+  //
+  // Registra el callback que se ejecutará al establecerse una conexión BLE.
+  // ------------------------------------------------------------
   void instalarCallbackConexionEstablecida( CallbackConexionEstablecida cb ) {
 	Bluefruit.Periph.setConnectCallback( cb );
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // instalarCallbackConexionTerminada()
+  //
+  // Registra el callback que se ejecutará cuando termine una conexión BLE.
+  // ------------------------------------------------------------
   void instalarCallbackConexionTerminada( CallbackConexionTerminada cb ) {
 	Bluefruit.Periph.setDisconnectCallback( cb );
   } // ()
 
-  // .........................................................
-  // .........................................................
+  // ------------------------------------------------------------
+  // getConexion()
+  //
+  // Devuelve la conexión BLE asociada al identificador recibido.
+  // ------------------------------------------------------------
   BLEConnection * getConexion( uint16_t connHandle ) {
 	return Bluefruit.Connection( connHandle );
   } // ()
@@ -337,9 +385,3 @@ public:
 }; // class
 
 #endif
-
-// ----------------------------------------------------------
-// ----------------------------------------------------------
-// ----------------------------------------------------------
-// ----------------------------------------------------------
-
