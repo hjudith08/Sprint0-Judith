@@ -1,5 +1,15 @@
 <?php
 
+// --------------------------------------------------------------
+// Fichero: LogicaNegocio.php
+// Descripción: Define los tipos y la lógica de negocio para validar, guardar y recuperar
+//              mediciones de O3.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: implementación de la lógica de negocio independiente de HTTP con acceso PDO a
+//             la base de datos.
+// --------------------------------------------------------------
 // ----------------------------------------------------
 // MedicionEntrada = ( tipo: Text, valor: R )
 // ----------------------------------------------------

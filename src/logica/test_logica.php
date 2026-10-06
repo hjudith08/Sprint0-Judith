@@ -1,6 +1,18 @@
 <?php
 
+// --------------------------------------------------------------
+// Fichero: test_logica.php
+// Descripción: Pruebas automáticas de integración de la lógica de negocio con la base de
+//              datos.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: validación reproducible de la lógica, persistencia y recuperación de
+//             mediciones.
+// --------------------------------------------------------------
 require_once "LogicaNegocio.php";
+
+$fallos = 0;
 
 
 // ----------------------------------------------------
@@ -74,9 +86,12 @@ $resultado =
         $medicionCorrecta
     );
 
-echo $resultado
-    ? "OK\n"
-    : "ERROR\n";
+if ($resultado) {
+    echo "OK\n";
+} else {
+    echo "ERROR\n";
+    $fallos++;
+}
 
 
 // ----------------------------------------------------
@@ -97,9 +112,12 @@ $resultado =
         $medicionIncorrecta
     );
 
-echo !$resultado
-    ? "OK\n"
-    : "ERROR\n";
+if (!$resultado) {
+    echo "OK\n";
+} else {
+    echo "ERROR\n";
+    $fallos++;
+}
 
 
 // ----------------------------------------------------
@@ -114,11 +132,12 @@ $resultadoGuardar =
         $medicionCorrecta
     );
 
-echo $resultadoGuardar->exito
-    ? "OK\n"
-    : "ERROR: " .
-      $resultadoGuardar->mensaje .
-      "\n";
+if ($resultadoGuardar->exito) {
+    echo "OK\n";
+} else {
+    echo "ERROR: " . $resultadoGuardar->mensaje . "\n";
+    $fallos++;
+}
 
 
 // ----------------------------------------------------
@@ -157,4 +176,7 @@ if (count($mediciones) === 1) {
 } else {
 
     echo "ERROR: no hay mediciones\n";
+    $fallos++;
 }
+
+exit($fallos === 0 ? 0 : 1);
