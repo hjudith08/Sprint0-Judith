@@ -1,12 +1,15 @@
 // --------------------------------------------------------------
 // Fichero: MainActivity.java
-// Descripción: Actividad principal. Escanea el iBeacon JU-GTI, interpreta major/minor y
-//              envía la medición de O3 recibida al servidor REST.
+// Descripción: Actividad principal. Escanea el iBeacon JU-GTI,
+//              interpreta major/minor y envía la medición de O3
+//              recibida al servidor REST.
 // Copyright: material académico y modificaciones del autor.
-// Fecha de adaptación: 05-10-2026
+// Fecha de adaptación: 06-10-2026
 // Autora de la adaptación: Judith Civico Aporta
-// Aportación: adaptación BLE para Android actual e integración de la cadena BLE -> REST.
+// Aportación: adaptación BLE para Android actual,
+//             diagnóstico de escaneo e integración BLE -> REST.
 // --------------------------------------------------------------
+
 package com.example.jcivapo.sprint0_ju;
 
 import android.Manifest;
@@ -68,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // onCreate()
     //
-    // Inicializa la actividad, prepara Bluetooth y solicita los permisos necesarios.
+    // Inicializa la actividad, prepara Bluetooth, muestra
+    // información de diagnóstico y solicita los permisos necesarios.
     // ------------------------------------------------------------
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,15 +89,77 @@ public class MainActivity extends AppCompatActivity {
 
 
         // ----------------------------------------------------
-        // Inicializar Bluetooth
+        // Diagnóstico de versión de Android
         // ----------------------------------------------------
+
+        Log.d(
+                ETIQUETA_LOG,
+                "Android SDK = "
+                        + Build.VERSION.SDK_INT
+        );
+
+
+        // ----------------------------------------------------
+        // Diagnóstico permiso de ubicación
+        // ----------------------------------------------------
+
+        boolean permisoUbicacion =
+                ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                        == PackageManager.PERMISSION_GRANTED;
+
+
+        Log.d(
+                ETIQUETA_LOG,
+                "Permiso ACCESS_FINE_LOCATION = "
+                        + permisoUbicacion
+        );
+
+
+        // ----------------------------------------------------
+        // Diagnóstico permisos Android 12+
+        // ----------------------------------------------------
+
+        if (
+                Build.VERSION.SDK_INT
+                        >= Build.VERSION_CODES.S
+        ) {
+
+            boolean permisoScan =
+                    ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.BLUETOOTH_SCAN
+                    )
+                            == PackageManager.PERMISSION_GRANTED;
+
+
+            boolean permisoConnect =
+                    ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                    )
+                            == PackageManager.PERMISSION_GRANTED;
+
+
+            Log.d(
+                    ETIQUETA_LOG,
+                    "Permiso BLUETOOTH_SCAN = "
+                            + permisoScan
+            );
+
+
+            Log.d(
+                    ETIQUETA_LOG,
+                    "Permiso BLUETOOTH_CONNECT = "
+                            + permisoConnect
+            );
+        }
+
 
         inicializarBluetooth();
 
-
-        // ----------------------------------------------------
-        // Solicitar permisos Bluetooth si hacen falta
-        // ----------------------------------------------------
 
         if (!tenemosPermisosBluetooth()) {
 
@@ -108,12 +173,13 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+
     // ------------------------------------------------------------
     // inicializarBluetooth()
     //
-    // Obtiene el adaptador Bluetooth del dispositivo y comprueba que esté disponible.
+    // Obtiene el adaptador Bluetooth del dispositivo y comprueba
+    // que esté disponible.
     // ------------------------------------------------------------
-
     private void inicializarBluetooth() {
 
         Log.d(
@@ -169,16 +235,22 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-
     // ------------------------------------------------------------
-    // tenemosPermisosBluetooth()
-    //
-    // Comprueba si la aplicación dispone de los permisos Bluetooth necesarios.
-    // ------------------------------------------------------------
-
+// tenemosPermisosBluetooth()
+//
+// Comprueba que la aplicación dispone de los permisos
+// necesarios para realizar el escaneo BLE.
+// ------------------------------------------------------------
     private boolean tenemosPermisosBluetooth() {
 
-        // Android 12 o superior
+        boolean permisoUbicacion =
+                ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                        == PackageManager.PERMISSION_GRANTED;
+
+
         if (
                 Build.VERSION.SDK_INT
                         >= Build.VERSION_CODES.S
@@ -200,25 +272,21 @@ public class MainActivity extends AppCompatActivity {
                             == PackageManager.PERMISSION_GRANTED;
 
 
-            return permisoScan && permisoConnect;
+            return permisoScan
+                    && permisoConnect
+                    && permisoUbicacion;
         }
 
 
-        // Android 11 o inferior
-        return ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        )
-                == PackageManager.PERMISSION_GRANTED;
+        return permisoUbicacion;
     }
 
-
     // ------------------------------------------------------------
-    // solicitarPermisosBluetooth()
-    //
-    // Solicita al usuario los permisos Bluetooth necesarios según la versión de Android.
-    // ------------------------------------------------------------
-
+// solicitarPermisosBluetooth()
+//
+// Solicita los permisos necesarios para realizar escaneos BLE
+// según la versión de Android.
+// ------------------------------------------------------------
     private void solicitarPermisosBluetooth() {
 
         Log.d(
@@ -237,7 +305,8 @@ public class MainActivity extends AppCompatActivity {
 
                     new String[]{
                             Manifest.permission.BLUETOOTH_SCAN,
-                            Manifest.permission.BLUETOOTH_CONNECT
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.ACCESS_FINE_LOCATION
                     },
 
                     CODIGO_PETICION_PERMISOS
@@ -261,9 +330,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // prepararEscaner()
     //
-    // Comprueba permisos, Bluetooth y disponibilidad del escáner antes de iniciar una búsqueda.
+    // Comprueba permisos, Bluetooth y disponibilidad del escáner
+    // antes de iniciar una búsqueda.
     // ------------------------------------------------------------
-
     private boolean prepararEscaner() {
 
         if (!tenemosPermisosBluetooth()) {
@@ -294,7 +363,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // Android 12+
         if (
                 Build.VERSION.SDK_INT
                         >= Build.VERSION_CODES.S
@@ -313,7 +381,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // Bluetooth apagado
         if (!bluetoothAdapter.isEnabled()) {
 
             Log.d(
@@ -365,9 +432,8 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // buscarTodosLosDispositivosBTLE()
     //
-    // Inicia un escaneo BLE sin filtrar por nombre de dispositivo.
+    // Inicia un escaneo BLE sin filtrar por nombre.
     // ------------------------------------------------------------
-
     private void buscarTodosLosDispositivosBTLE() {
 
         Log.d(
@@ -380,6 +446,9 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
+
+
+        detenerBusquedaDispositivosBTLE();
 
 
         crearCallbackEscaneo();
@@ -411,13 +480,11 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-
-    // ------------------------------------------------------------
-    // buscarEsteDispositivoBTLE()
-    //
-    // Inicia un escaneo BLE filtrado por el nombre del dispositivo indicado.
-    // ------------------------------------------------------------
-
+// buscarEsteDispositivoBTLE()
+//
+// Inicia un escaneo BLE filtrando únicamente por el nombre
+// del dispositivo JU-GTI.
+// ------------------------------------------------------------
     private void buscarEsteDispositivoBTLE(
             final String dispositivoBuscado
     ) {
@@ -435,9 +502,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        // Detener un posible escaneo anterior.
+        detenerBusquedaDispositivosBTLE();
+
+
+        // Crear el callback que recibirá los resultados.
         crearCallbackEscaneo();
 
 
+        // Crear filtro por nombre.
         ScanFilter filtro =
                 new ScanFilter.Builder()
                         .setDeviceName(
@@ -452,6 +525,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
 
+        // Escaneo rápido para la prueba del Sprint 0.
         ScanSettings settings =
                 new ScanSettings.Builder()
                         .setScanMode(
@@ -477,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(
                 ETIQUETA_LOG,
-                "Buscando: "
+                "Buscando únicamente: "
                         + dispositivoBuscado
         );
 
@@ -493,9 +567,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // crearCallbackEscaneo()
     //
-    // Crea el callback que procesa los resultados y errores del escaneo BLE.
+    // Crea el callback que procesa los resultados y errores
+    // del escaneo BLE.
     // ------------------------------------------------------------
-
     private void crearCallbackEscaneo() {
 
         callbackDelEscaneo =
@@ -510,6 +584,31 @@ public class MainActivity extends AppCompatActivity {
                         super.onScanResult(
                                 callbackType,
                                 resultado
+                        );
+
+
+                        String nombreRecibido = null;
+
+
+                        if (
+                                resultado != null
+                                        &&
+                                        resultado.getScanRecord() != null
+                        ) {
+
+                            nombreRecibido =
+                                    resultado
+                                            .getScanRecord()
+                                            .getDeviceName();
+                        }
+
+
+                        Log.d(
+                                ETIQUETA_LOG,
+                                "onScanResult(): nombre="
+                                        + nombreRecibido
+                                        + " rssi="
+                                        + resultado.getRssi()
                         );
 
 
@@ -564,9 +663,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // mostrarInformacionDispositivoBTLE()
     //
-    // Interpreta una trama BLE detectada, muestra sus campos y procesa el iBeacon recibido.
+    // Interpreta una trama BLE detectada, muestra sus campos
+    // y procesa el iBeacon recibido.
     // ------------------------------------------------------------
-
     private void mostrarInformacionDispositivoBTLE(
             ScanResult resultado
     ) {
@@ -613,7 +712,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         String nombre =
-                bluetoothDevice.getName();
+                resultado
+                        .getScanRecord()
+                        .getDeviceName();
+
+
+        if (nombre == null) {
+
+            nombre =
+                    bluetoothDevice.getName();
+        }
 
 
         String direccion =
@@ -625,10 +733,12 @@ public class MainActivity extends AppCompatActivity {
                 "****************************************************"
         );
 
+
         Log.d(
                 ETIQUETA_LOG,
                 "****** DISPOSITIVO DETECTADO BTLE ******************"
         );
+
 
         Log.d(
                 ETIQUETA_LOG,
@@ -668,17 +778,13 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-        /*
-         * La clase TramaIBeacon proporcionada por
-         * el profesor espera al menos los primeros
-         * 30 bytes de la trama.
-         */
         if (bytes.length < 30) {
 
             Log.d(
                     ETIQUETA_LOG,
                     "No parece una trama iBeacon válida"
             );
+
 
             return;
         }
@@ -700,67 +806,6 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(
                     ETIQUETA_LOG,
-                    "prefijo = "
-                            + Utilidades.bytesToHexString(
-                            tib.getPrefijo()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "advFlags = "
-                            + Utilidades.bytesToHexString(
-                            tib.getAdvFlags()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "advHeader = "
-                            + Utilidades.bytesToHexString(
-                            tib.getAdvHeader()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "companyID = "
-                            + Utilidades.bytesToHexString(
-                            tib.getCompanyID()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "iBeacon type = "
-                            + Integer.toHexString(
-                            tib.getiBeaconType()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "iBeacon length = "
-                            + tib.getiBeaconLength()
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
-                    "uuid HEX = "
-                            + Utilidades.bytesToHexString(
-                            tib.getUUID()
-                    )
-            );
-
-
-            Log.d(
-                    ETIQUETA_LOG,
                     "uuid texto = "
                             + Utilidades.bytesToString(
                             tib.getUUID()
@@ -771,28 +816,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d(
                     ETIQUETA_LOG,
                     "major = "
-                            + Utilidades.bytesToHexString(
-                            tib.getMajor()
-                    )
-                            + " ("
                             + Utilidades.bytesToInt(
                             tib.getMajor()
                     )
-                            + ")"
             );
 
 
             Log.d(
                     ETIQUETA_LOG,
                     "minor = "
-                            + Utilidades.bytesToHexString(
-                            tib.getMinor()
-                    )
-                            + " ("
                             + Utilidades.bytesToInt(
                             tib.getMinor()
                     )
-                            + ")"
             );
 
 
@@ -826,46 +861,66 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
-    ----------------------------------------------------
-    nombre: Text, trama: TramaIBeacon
-        -->
-    enviarMedicionIBeaconAlREST() -->
-
-    Si el anuncio pertenece a JU-GTI y su major identifica O3,
-    crea una MedicionEntrada con el minor y la envía al REST.
-    Un mismo major solo se envía una vez.
-    ----------------------------------------------------
-    */
+    // ------------------------------------------------------------
+    // enviarMedicionIBeaconAlREST()
+    //
+    // Comprueba que la trama corresponde a JU-GTI y que el tipo
+    // codificado en el major es O3. Lee el valor desde minor y
+    // envía la medición al REST evitando duplicados.
+    // ------------------------------------------------------------
     private void enviarMedicionIBeaconAlREST(
             String nombre,
             TramaIBeacon trama
     ) {
 
         if (!NOMBRE_BEACON.equals(nombre)) {
+
             return;
         }
+
 
         int major =
                 Utilidades.bytesToInt(
                         trama.getMajor()
                 );
 
+
         int tipoMedicion =
                 (major >> 8) & 0xFF;
 
+
         if (tipoMedicion != TIPO_O3) {
+
+            Log.d(
+                    ETIQUETA_SPRINT0,
+                    "JU-GTI ignorado: tipo="
+                            + tipoMedicion
+            );
+
             return;
         }
 
+
         if (major == ultimoMajorEnviado) {
+
             return;
         }
+
 
         int valorO3 =
                 Utilidades.bytesToInt(
                         trama.getMinor()
                 );
+
+
+        Log.d(
+                ETIQUETA_SPRINT0,
+                "Medición BLE recibida -> major="
+                        + major
+                        + " valor="
+                        + valorO3
+        );
+
 
         MedicionEntrada medicion =
                 new MedicionEntrada(
@@ -873,13 +928,18 @@ public class MainActivity extends AppCompatActivity {
                         valorO3
                 );
 
-        ultimoMajorEnviado = major;
+
+        ultimoMajorEnviado =
+                major;
+
 
         PeticionarioREST peticionarioREST =
                 new PeticionarioREST();
 
+
         peticionarioREST.enviarMedicion(
                 medicion,
+
                 (exito, mensaje) -> {
 
                     Log.d(
@@ -894,9 +954,11 @@ public class MainActivity extends AppCompatActivity {
                                     + mensaje
                     );
 
+
                     if (!exito) {
-                        // Permite reintentar el mismo anuncio si el POST falló.
-                        ultimoMajorEnviado = -1;
+
+                        ultimoMajorEnviado =
+                                -1;
                     }
                 }
         );
@@ -908,7 +970,6 @@ public class MainActivity extends AppCompatActivity {
     //
     // Detiene el escaneo BLE activo y libera el callback asociado.
     // ------------------------------------------------------------
-
     private void detenerBusquedaDispositivosBTLE() {
 
         if (
@@ -941,7 +1002,8 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-        callbackDelEscaneo = null;
+        callbackDelEscaneo =
+                null;
 
 
         Log.d(
@@ -954,9 +1016,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // botonBuscarDispositivosBTLEPulsado()
     //
-    // Gestiona la pulsación del botón que inicia la búsqueda de todos los dispositivos BLE.
+    // Gestiona la pulsación del botón que inicia la búsqueda
+    // de todos los dispositivos BLE.
     // ------------------------------------------------------------
-
     public void botonBuscarDispositivosBTLEPulsado(
             View v
     ) {
@@ -974,9 +1036,8 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // botonBuscarNuestroDispositivoBTLEPulsado()
     //
-    // Gestiona la pulsación del botón que busca únicamente el beacon JU-GTI.
+    // Gestiona la pulsación del botón que busca el beacon JU-GTI.
     // ------------------------------------------------------------
-
     public void botonBuscarNuestroDispositivoBTLEPulsado(
             View v
     ) {
@@ -998,7 +1059,6 @@ public class MainActivity extends AppCompatActivity {
     //
     // Gestiona la pulsación del botón que detiene el escaneo BLE.
     // ------------------------------------------------------------
-
     public void botonDetenerBusquedaDispositivosBTLEPulsado(
             View v
     ) {
@@ -1016,9 +1076,9 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------
     // onRequestPermissionsResult()
     //
-    // Procesa la respuesta del usuario a la solicitud de permisos Bluetooth.
+    // Procesa la respuesta del usuario a la solicitud
+    // de permisos Bluetooth.
     // ------------------------------------------------------------
-
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
@@ -1075,7 +1135,6 @@ public class MainActivity extends AppCompatActivity {
     //
     // Detiene cualquier escaneo BLE antes de destruir la actividad.
     // ------------------------------------------------------------
-
     @Override
     protected void onDestroy() {
 
