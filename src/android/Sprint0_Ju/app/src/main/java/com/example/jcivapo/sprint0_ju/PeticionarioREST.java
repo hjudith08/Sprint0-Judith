@@ -1,3 +1,12 @@
+// --------------------------------------------------------------
+// Fichero: PeticionarioREST.java
+// Descripción: Cliente HTTP encargado de enviar mediciones desde Android al endpoint POST
+//              /mediciones.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: comunicación Android -> REST mediante HttpURLConnection.
+// --------------------------------------------------------------
 package com.example.jcivapo.sprint0_ju;
 
 import android.os.Handler;

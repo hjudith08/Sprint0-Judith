@@ -1,3 +1,11 @@
+// --------------------------------------------------------------
+// Fichero: MedicionEntrada.java
+// Descripción: Tipo de datos que representa la medición que Android envía al servidor REST.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Aportación: definición de los campos tipo y valor usados en la comunicación con el REST.
+// --------------------------------------------------------------
 package com.example.jcivapo.sprint0_ju;
 
 public class MedicionEntrada {

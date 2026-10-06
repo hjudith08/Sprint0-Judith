@@ -1,3 +1,13 @@
+// --------------------------------------------------------------
+// Fichero: Utilidades.java
+// Descripción: Clase proporcionada como base docente con utilidades de conversión de bytes,
+//              enteros, texto y UUID.
+// Copyright: material académico y modificaciones del autor.
+// Fecha de adaptación: 05-10-2026
+// Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell
+// Aportación: integración de las utilidades docentes necesarias para interpretar iBeacon.
+// --------------------------------------------------------------
 package com.example.jcivapo.sprint0_ju;
 
 
@@ -5,20 +15,23 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-// -----------------------------------------------------------------------------------
-// @author: Jordi Bataller i Mascarell
-// -----------------------------------------------------------------------------------
 public class Utilidades {
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // stringToBytes()
+    //
+    // Convierte una cadena de texto en un array de bytes.
+    // ------------------------------------------------------------
     public static byte[] stringToBytes ( String texto ) {
         return texto.getBytes();
         // byte[] b = string.getBytes(StandardCharsets.UTF_8); // Ja
     } // ()
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // stringToUUID()
+    //
+    // Convierte una cadena de 16 caracteres en un objeto UUID.
+    // ------------------------------------------------------------
     public static UUID stringToUUID( String uuid ) {
         if ( uuid.length() != 16 ) {
             throw new Error( "stringUUID: string no tiene 16 caracteres ");
@@ -36,20 +49,29 @@ public class Utilidades {
         return res;
     } // ()
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // uuidToString()
+    //
+    // Convierte un UUID en una cadena de texto.
+    // ------------------------------------------------------------
     public static String uuidToString ( UUID uuid ) {
         return bytesToString( dosLongToBytes( uuid.getMostSignificantBits(), uuid.getLeastSignificantBits() ) );
     } // ()
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // uuidToHexString()
+    //
+    // Convierte un UUID en una representación hexadecimal.
+    // ------------------------------------------------------------
     public static String uuidToHexString ( UUID uuid ) {
         return bytesToHexString( dosLongToBytes( uuid.getMostSignificantBits(), uuid.getLeastSignificantBits() ) );
     } // ()
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // bytesToString()
+    //
+    // Convierte un array de bytes en una cadena de caracteres.
+    // ------------------------------------------------------------
     public static String bytesToString( byte[] bytes ) {
         if (bytes == null ) {
             return "";
@@ -62,8 +84,11 @@ public class Utilidades {
         return sb.toString();
     }
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // dosLongToBytes()
+    //
+    // Une dos valores long en un único array de 16 bytes.
+    // ------------------------------------------------------------
     public static byte[] dosLongToBytes( long masSignificativos, long menosSignificativos ) {
         ByteBuffer buffer = ByteBuffer.allocate( 2 * Long.BYTES );
         buffer.putLong( masSignificativos );
@@ -71,20 +96,29 @@ public class Utilidades {
         return buffer.array();
     }
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // bytesToInt()
+    //
+    // Convierte un array de bytes en un valor entero.
+    // ------------------------------------------------------------
     public static int bytesToInt( byte[] bytes ) {
         return new BigInteger(bytes).intValue();
     }
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // bytesToLong()
+    //
+    // Convierte un array de bytes en un valor long.
+    // ------------------------------------------------------------
     public static long bytesToLong( byte[] bytes ) {
         return new BigInteger(bytes).longValue();
     }
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // bytesToIntOK()
+    //
+    // Convierte manualmente un array de bytes en un entero respetando el orden de los bytes.
+    // ------------------------------------------------------------
     public static int bytesToIntOK( byte[] bytes ) {
         if (bytes == null ) {
             return 0;
@@ -121,8 +155,11 @@ public class Utilidades {
         return res;
     } // ()
 
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // bytesToHexString()
+    //
+    // Convierte un array de bytes en una cadena hexadecimal.
+    // ------------------------------------------------------------
     public static String bytesToHexString( byte[] bytes ) {
 
         if (bytes == null ) {
@@ -137,9 +174,3 @@ public class Utilidades {
         return sb.toString();
     } // ()
 } // class
-// -----------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------
-
-
