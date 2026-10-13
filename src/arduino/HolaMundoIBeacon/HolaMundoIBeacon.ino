@@ -96,7 +96,7 @@ void setup() {
   Globales::elMedidor.iniciarMedidor();
 
   // Dar un pequeño margen antes de comenzar el bucle principal.
-  esperar( 1000 );
+  esperar( 9000 );
 
   Globales::elPuerto.escribir( "---- setup(): fin ---- \n " );
 
@@ -200,7 +200,7 @@ void loop () {
   elPublicador.laEmisora.emitirAnuncioIBeaconLibre ( "MolaMolaMolaMolaMolaM", 21 );
   */
 
-  esperar( 1000 );
+  esperar( 9000 );
 
   elPublicador.laEmisora.detenerAnuncio();
   
