@@ -63,6 +63,7 @@ namespace Globales {
 
 // ------------------------------------------------------------
 // inicializarPlaquita()
+// --> inicializarPlaquita() -->
 //
 // Inicializa los elementos básicos utilizados por la placa.
 // ------------------------------------------------------------
@@ -74,6 +75,7 @@ void inicializarPlaquita () {
 
 // ------------------------------------------------------------
 // setup()
+// --> setup() -->
 //
 // Inicializa el puerto serie, la emisora BLE y el medidor antes de comenzar el programa.
 // ------------------------------------------------------------
@@ -96,7 +98,7 @@ void setup() {
   Globales::elMedidor.iniciarMedidor();
 
   // Dar un pequeño margen antes de comenzar el bucle principal.
-  esperar( 1000 );
+  esperar( 9000 );
 
   Globales::elPuerto.escribir( "---- setup(): fin ---- \n " );
 
@@ -104,6 +106,7 @@ void setup() {
 
 // ------------------------------------------------------------
 // lucecitas()
+// --> lucecitas() -->
 //
 // Hace parpadear el LED para indicar visualmente que la placa sigue ejecutándose.
 // ------------------------------------------------------------
@@ -131,6 +134,7 @@ namespace Loop {
 
 // ------------------------------------------------------------
 // loop()
+// --> loop() -->
 //
 // Genera la medición ficticia de O3, incrementa el contador y publica el iBeacon.
 // ------------------------------------------------------------
@@ -200,7 +204,7 @@ void loop () {
   elPublicador.laEmisora.emitirAnuncioIBeaconLibre ( "MolaMolaMolaMolaMolaM", 21 );
   */
 
-  esperar( 1000 );
+  esperar( 9000 );
 
   elPublicador.laEmisora.detenerAnuncio();
   

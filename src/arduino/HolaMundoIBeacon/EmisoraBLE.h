@@ -96,6 +96,10 @@ public:
   //
   // Inicializa Bluefruit y detiene cualquier anuncio previo para comenzar desde un estado conocido.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // --> encenderEmisora() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void encenderEmisora() {
 	// Serial.println ( "Bluefruit.begin() " );
 	 Bluefruit.begin(); 
@@ -124,6 +128,10 @@ public:
   //
   // Detiene el advertising BLE si en ese momento existe un anuncio activo.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // --> detenerAnuncio() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void detenerAnuncio() {
 
 	if ( (*this).estaAnunciando() ) {
@@ -136,6 +144,10 @@ public:
   // .........................................................
   // estaAnunciando() -> Boleano
   // .........................................................
+  // ------------------------------------------------------------
+  // --> estaAnunciando() --> resultado: bool
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   bool estaAnunciando() {
 	return Bluefruit.Advertising.isRunning();
   } // ()
@@ -144,6 +156,10 @@ public:
   // emitirAnuncioIBeacon()
   //
   // Construye un iBeacon con UUID, major, minor y RSSI y lo anuncia de forma indefinida.
+  // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // uint8_t * beaconUUID, int16_t major, int16_t minor, uint8_t rssi --> emitirAnuncioIBeacon() -->
+  // Diseño lógico de la operación de infraestructura BLE.
   // ------------------------------------------------------------
   void emitirAnuncioIBeacon( uint8_t * beaconUUID, int16_t major, int16_t minor, uint8_t rssi ) {
 
@@ -234,6 +250,10 @@ public:
   // Para enviar como carga libre los últimos 21 bytes de un iBeacon (lo que normalmente sería uuid-16 major-2 minor-2 txPower-1)
   // .........................................................
   /*
+  // ------------------------------------------------------------
+  // const char * carga --> emitirAnuncioIBeaconLibre() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void emitirAnuncioIBeaconLibre( const char * carga ) {
 
 	const uint8_t tamanyoCarga = strlen( carga );
@@ -303,6 +323,10 @@ public:
   //
   // Añade un servicio BLE a la emisora y lo deja preparado para su uso.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // ServicioEnEmisora & servicio --> anyadirServicio() --> resultado: bool
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   bool anyadirServicio( ServicioEnEmisora & servicio ) {
 
 	Globales::elPuerto.escribir( " Bluefruit.Advertising.addService( servicio ); \n");
@@ -324,6 +348,10 @@ public:
   // anyadirServicioConSusCaracteristicas()
   //
   // Añade un servicio BLE junto con las características que contiene.
+  // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // ServicioEnEmisora & servicio --> anyadirServicioConSusCaracteristicas() --> resultado: bool
+  // Diseño lógico de la operación de infraestructura BLE.
   // ------------------------------------------------------------
   bool anyadirServicioConSusCaracteristicas( ServicioEnEmisora & servicio ) { 
 	return (*this).anyadirServicio( servicio );
@@ -360,6 +388,10 @@ public:
   //
   // Registra el callback que se ejecutará al establecerse una conexión BLE.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // CallbackConexionEstablecida cb --> instalarCallbackConexionEstablecida() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void instalarCallbackConexionEstablecida( CallbackConexionEstablecida cb ) {
 	Bluefruit.Periph.setConnectCallback( cb );
   } // ()
@@ -369,6 +401,10 @@ public:
   //
   // Registra el callback que se ejecutará cuando termine una conexión BLE.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // CallbackConexionTerminada cb --> instalarCallbackConexionTerminada() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void instalarCallbackConexionTerminada( CallbackConexionTerminada cb ) {
 	Bluefruit.Periph.setDisconnectCallback( cb );
   } // ()
@@ -377,6 +413,10 @@ public:
   // getConexion()
   //
   // Devuelve la conexión BLE asociada al identificador recibido.
+  // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // uint16_t connHandle --> getConexion() --> resultado: BLEConnection *
+  // Diseño lógico de la operación de infraestructura BLE.
   // ------------------------------------------------------------
   BLEConnection * getConexion( uint16_t connHandle ) {
 	return Bluefruit.Connection( connHandle );

@@ -16,15 +16,9 @@ const logicaFake =
 
 /*
 ----------------------------------------------------
-mostrarMedicion(medicion)
+medicion: Medicion --> mostrarMedicion() -->
 
 Muestra una medición en la interfaz.
-
-Entrada:
-    medicion
-
-Salida:
-    ninguna
 ----------------------------------------------------
 */
 
@@ -53,15 +47,9 @@ function mostrarMedicion(
 
 /*
 ----------------------------------------------------
-mostrarError(mensaje)
+mensaje: Text --> mostrarError() -->
 
 Muestra un mensaje de error en la interfaz.
-
-Entrada:
-    mensaje
-
-Salida:
-    ninguna
 ----------------------------------------------------
 */
 
@@ -78,15 +66,9 @@ function mostrarError(
 
 /*
 ----------------------------------------------------
-limpiarDatos()
+--> limpiarDatos() -->
 
 Limpia los datos mostrados en la interfaz.
-
-Entrada:
-    ninguna
-
-Salida:
-    ninguna
 ----------------------------------------------------
 */
 
@@ -113,16 +95,9 @@ function limpiarDatos() {
 
 /*
 ----------------------------------------------------
-cargarUltimaMedicion()
+--> cargarUltimaMedicion() -->
 
-Obtiene la última medición desde LogicaFake
-y actualiza la interfaz.
-
-Entrada:
-    ninguna
-
-Salida:
-    ninguna
+Obtiene la última medición desde LogicaFake y actualiza la interfaz.
 ----------------------------------------------------
 */
 
@@ -145,12 +120,12 @@ async function cargarUltimaMedicion() {
 
     try {
 
-        const medicion =
+        const mediciones =
             await logicaFake
-                .leerUltimaMedicion();
+                .obtenerUltimaMedicion();
 
 
-        if (medicion === null) {
+        if (mediciones.length === 0) {
 
             limpiarDatos();
 
@@ -163,7 +138,7 @@ async function cargarUltimaMedicion() {
 
 
         mostrarMedicion(
-            medicion
+            mediciones[0]
         );
 
 
@@ -197,15 +172,9 @@ async function cargarUltimaMedicion() {
 
 /*
 ----------------------------------------------------
-inicializarInterfaz()
+--> inicializarInterfaz() -->
 
-Inicializa la página al terminar de cargar el documento.
-
-Entrada:
-    ninguna
-
-Salida:
-    ninguna
+Inicializa la página y registra el evento del botón de actualización.
 ----------------------------------------------------
 */
 

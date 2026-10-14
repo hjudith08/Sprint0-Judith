@@ -19,7 +19,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // stringToBytes()
-    //
+// texto: Text --> stringToBytes() --> bytes: Bytes
+//
     // Convierte una cadena de texto en un array de bytes.
     // ------------------------------------------------------------
     public static byte[] stringToBytes ( String texto ) {
@@ -29,7 +30,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // stringToUUID()
-    //
+// uuidTexto: Text --> stringToUUID() --> uuid: UUID
+//
     // Convierte una cadena de 16 caracteres en un objeto UUID.
     // ------------------------------------------------------------
     public static UUID stringToUUID( String uuid ) {
@@ -51,7 +53,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // uuidToString()
-    //
+// uuid: UUID --> uuidToString() --> texto: Text
+//
     // Convierte un UUID en una cadena de texto.
     // ------------------------------------------------------------
     public static String uuidToString ( UUID uuid ) {
@@ -60,7 +63,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // uuidToHexString()
-    //
+// uuid: UUID --> uuidToHexString() --> hexadecimal: Text
+//
     // Convierte un UUID en una representación hexadecimal.
     // ------------------------------------------------------------
     public static String uuidToHexString ( UUID uuid ) {
@@ -69,7 +73,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // bytesToString()
-    //
+// bytes: Bytes --> bytesToString() --> texto: Text
+//
     // Convierte un array de bytes en una cadena de caracteres.
     // ------------------------------------------------------------
     public static String bytesToString( byte[] bytes ) {
@@ -86,7 +91,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // dosLongToBytes()
-    //
+// masSignificativos: Z, menosSignificativos: Z --> dosLongToBytes() --> bytes: Bytes
+//
     // Une dos valores long en un único array de 16 bytes.
     // ------------------------------------------------------------
     public static byte[] dosLongToBytes( long masSignificativos, long menosSignificativos ) {
@@ -98,7 +104,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // bytesToInt()
-    //
+// bytes: Bytes --> bytesToInt() --> valor: Z
+//
     // Convierte un array de bytes en un valor entero.
     // ------------------------------------------------------------
     public static int bytesToInt( byte[] bytes ) {
@@ -107,7 +114,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // bytesToLong()
-    //
+// bytes: Bytes --> bytesToLong() --> valor: Z
+//
     // Convierte un array de bytes en un valor long.
     // ------------------------------------------------------------
     public static long bytesToLong( byte[] bytes ) {
@@ -116,7 +124,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // bytesToIntOK()
-    //
+// bytes: Bytes --> bytesToIntOK() --> valor: Z
+//
     // Convierte manualmente un array de bytes en un entero respetando el orden de los bytes.
     // ------------------------------------------------------------
     public static int bytesToIntOK( byte[] bytes ) {
@@ -157,7 +166,8 @@ public class Utilidades {
 
     // ------------------------------------------------------------
     // bytesToHexString()
-    //
+// bytes: Bytes --> bytesToHexString() --> hexadecimal: Text
+//
     // Convierte un array de bytes en una cadena hexadecimal.
     // ------------------------------------------------------------
     public static String bytesToHexString( byte[] bytes ) {

@@ -22,7 +22,8 @@ class PuertoSerie  {
 public:
   // ------------------------------------------------------------
   // PuertoSerie()
-  //
+// baudios: N --> PuertoSerie() --> puerto: PuertoSerie
+//
   // Inicializa el puerto serie con la velocidad en baudios indicada.
   // ------------------------------------------------------------
   PuertoSerie (long baudios) {
@@ -32,7 +33,8 @@ public:
 
   // ------------------------------------------------------------
   // esperarDisponible()
-  //
+// --> esperarDisponible() -->
+//
   // Espera hasta tres segundos a que el puerto serie esté disponible.
   // ------------------------------------------------------------
   void esperarDisponible() {
@@ -47,7 +49,8 @@ public:
 
   // ------------------------------------------------------------
   // escribir()
-  //
+// mensaje: T --> escribir() -->
+//
   // Escribe por el puerto serie un mensaje de cualquier tipo compatible con Serial.print().
   // ------------------------------------------------------------
   template<typename T>

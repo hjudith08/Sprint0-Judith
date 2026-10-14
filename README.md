@@ -2,93 +2,58 @@
 
 Proyecto desarrollado para el Sprint 0 de la asignatura de Proyecto de Aplicaciones de Biometría y Medio Ambiente.
 
-El objetivo del Sprint 0 es comprobar el funcionamiento completo de la arquitectura del sistema, desde la generación de una medición hasta su almacenamiento y posterior visualización en una interfaz web.
+El objetivo es comprobar la cadena completa desde una medición ficticia generada en Arduino hasta su visualización en una página web.
 
-## Arquitectura del sistema
-
-El flujo general del proyecto es:
+## Flujo del Sprint 0
 
 ```text
 SparkFun Pro nRF52840 Mini
         |
-        | BLE / iBeacon
+        | BLE / iBeacon JU-GTI
         v
-Aplicación Android
+Aplicación Android (Java)
         |
         | POST /mediciones
         v
-Servidor REST
+Servidor REST (PHP)
         |
         v
-Lógica de negocio
+Lógica de negocio (PHP)
         |
         v
-Base de datos
+Base de datos MySQL / MariaDB
         |
         | GET /mediciones/ultima
         v
 Interfaz web
 ```
 
-## Funcionamiento del Sprint 0
-
-Durante este Sprint se utiliza una medición de prueba de ozono:
+La medición ficticia utilizada es:
 
 ```text
 Tipo: O3
 Valor: 1234
 ```
 
-La aplicación Android obtiene esta medición mediante una lógica fake y la envía al servidor REST.
-
-El servidor REST recibe la medición y utiliza la lógica de negocio para validarla y almacenarla en la base de datos.
-
-Posteriormente, la interfaz web solicita la última medición almacenada y muestra:
-
-- fecha;
-- tipo;
-- valor.
-
-## Tecnologías utilizadas
-
-### Microprocesador
-
-- SparkFun Pro nRF52840 Mini.
-- Arduino.
-- C++.
-- Bluetooth Low Energy.
-- iBeacon.
-
-### Aplicación móvil
-
-- Android Studio.
-- Java.
-- Bluetooth Low Energy.
-- `HttpURLConnection`.
-
-### Servidor
-
-- PHP.
-- API REST.
-- JSON.
-
-### Base de datos
-
-- MySQL / MariaDB.
-
-### Interfaz web
-
-- HTML5.
-- CSS.
-- JavaScript.
-- `fetch()`.
+El valor nace en Arduino, se codifica en la trama iBeacon, Android lo recibe y lo envía al servidor REST. La lógica de negocio valida y almacena la medición. La web consulta después la última medición almacenada.
 
 ## Estructura del repositorio
 
 ```text
 .
 ├── context/
+│   ├── Software_Engineering_Spec.md
+│   └── Database_Design_Spec.md
 ├── doc/
+│   ├── README.md
+│   ├── acceptance_criteria.md
+│   ├── android_design.md
+│   ├── arduino_design.md
+│   ├── rest_communication_design.md
+│   ├── logica_business_logic_design.md
+│   ├── bd_database_design.md
+│   ├── web_frontend_business_logic_design.md
+│   └── web_design.md
 ├── prompts/
 ├── src/
 │   ├── android/
@@ -98,305 +63,190 @@ Posteriormente, la interfaz web solicita la última medición almacenada y muest
 │   ├── rest/
 │   └── web/
 ├── author.md
-├── CLAUDE.md
 └── README.md
 ```
 
-### Carpeta `context`
+### Correspondencia exacta entre diseño e implementación
 
-Contiene la documentación y las especificaciones utilizadas como referencia para el desarrollo del proyecto.
-
-### Carpeta `doc`
-
-Contiene los diseños de los distintos componentes del sistema.
-
-Entre ellos se encuentran:
+Se usa la variante de nombres prefijados admitida por el agente v2 para conservar la
+implementación funcional sin mover código:
 
 ```text
-bd_design.md
-logica_design.md
-rest_design.md
-web_design.md
+rest_communication_design.md          -> src/rest/
+logica_business_logic_design.md       -> src/logica/
+bd_database_design.md                 -> src/bd/
+web_frontend_business_logic_design.md -> src/web/js/LogicaFake.js
+web_design.md                         -> src/web/
+android_design.md                     -> src/android/
+arduino_design.md                     -> src/arduino/
 ```
 
-### Carpeta `prompts`
+De esta forma no existen diseños duplicados o ambiguos y cada documento indica de forma
+explícita qué implementación revisa.
 
-Contiene los prompts utilizados durante el desarrollo del proyecto con herramientas de inteligencia artificial.
+## Componentes
 
-### Carpeta `src/arduino`
+### Arduino
 
-Contiene el código del microprocesador encargado de generar la medición y emitir la información mediante BLE/iBeacon.
+`src/arduino/HolaMundoIBeacon/` contiene la implementación para SparkFun Pro nRF52840 Mini. Durante el Sprint 0 publica la medición ficticia de O3 mediante un iBeacon llamado `JU-GTI`.
 
-### Carpeta `src/android`
+### Android
 
-Contiene la aplicación Android encargada de trabajar con la información BLE y comunicarse con el servidor REST.
+`src/android/Sprint0_Ju/` contiene la aplicación Java que escanea BLE, interpreta la trama iBeacon y envía la medición al REST mediante `HttpURLConnection`.
 
-### Carpeta `src/bd`
+`LogicaFake` se conserva únicamente para pruebas aisladas; el valor del test funcional completo procede de Arduino.
 
-Contiene los elementos relacionados con la base de datos.
+### REST
 
-### Carpeta `src/logica`
-
-Contiene la lógica de negocio del sistema.
-
-### Carpeta `src/rest`
-
-Contiene el servidor REST.
-
-### Carpeta `src/web`
-
-Contiene la interfaz web encargada de consultar y mostrar la última medición almacenada.
-
-## Base de datos
-
-La tabla principal utilizada es:
-
-```text
-Mediciones
-```
-
-Sus campos son:
-
-```text
-id
-fecha
-tipo
-valor
-```
-
-El campo `id` se genera automáticamente mediante autoincremento.
-
-El campo `fecha` también se genera automáticamente al insertar una nueva medición.
-
-## API REST
-
-Durante el Sprint 0 se utilizan dos operaciones principales.
-
-### Guardar una medición
-
-Ruta:
+`src/rest/` contiene la capa de comunicación HTTP. Las rutas principales son:
 
 ```text
 POST /mediciones
-```
-
-Ejemplo de JSON enviado:
-
-```json
-{
-    "tipo": "O3",
-    "valor": 1234
-}
-```
-
-Esta operación permite almacenar una nueva medición en la base de datos.
-
-### Obtener la última medición
-
-Ruta:
-
-```text
 GET /mediciones/ultima
 ```
 
-Ejemplo de respuesta:
+La capa REST delega las reglas de negocio en `LogicaNegocio`.
 
-```json
-{
-    "id": 5,
-    "fecha": "2026-10-04 13:01:54",
-    "tipo": "O3",
-    "valor": 1234
-}
-```
+### Lógica de negocio
 
-Esta operación permite recuperar la última medición almacenada.
+`src/logica/` contiene `LogicaNegocio.php`. Esta capa valida, guarda y recupera mediciones y no implementa rutas HTTP.
 
-## Servidor utilizado
+### Base de datos
 
-Durante el Sprint 0 el servidor REST se encuentra desplegado en Plesk.
-
-### Ruta utilizada por Android
+`src/bd/crear_tabla.sql` contiene el esquema reproducible de la tabla:
 
 ```text
-https://jcivapo.upv.edu.es/rest/index.php/mediciones
+Mediciones(id, fecha, tipo, valor)
 ```
 
-Esta ruta se utiliza para enviar mediciones mediante `POST`.
+### Web
 
-### Ruta utilizada por la web
+`src/web/` contiene la interfaz. `app.js` se ocupa de la presentación y utiliza `LogicaFake.js` para obtener la última medición mediante REST.
+
+
+### Paridad frontend/backend
+
+La lógica cliente web y la lógica de negocio backend exponen la misma operación lógica:
 
 ```text
-https://jcivapo.upv.edu.es/rest/index.php/mediciones/ultima
+obtenerUltimaMedicion() --> [ Medicion ]
 ```
 
-Esta ruta se utiliza para obtener la última medición mediante `GET`.
+El frontend devuelve `[]` cuando no hay datos y `[Medicion]` cuando existe una última
+medición; `app.js` consume el primer elemento para mostrarlo.
 
-## Aplicación Android
+## Despliegue
 
-La aplicación Android incluye una lógica fake utilizada durante el Sprint 0.
+### Base de datos
 
-La medición de prueba utilizada es:
+1. Crear una base de datos MySQL/MariaDB.
+2. Ejecutar `src/bd/crear_tabla.sql`.
+3. Configurar en el servidor las credenciales reales sin subirlas al repositorio.
+
+### REST
+
+Desplegar el contenido necesario de `src/rest/` junto con `src/logica/` en el servidor PHP manteniendo las rutas relativas que utiliza la implementación existente.
+
+Durante el Sprint se utiliza el servidor de la UPV y las rutas públicas configuradas en el código del proyecto.
+
+### Web
+
+Desplegar `src/web/` en un servidor web y asegurar que puede acceder al endpoint REST configurado en `LogicaFake.js`.
+
+### Android
+
+Abrir `src/android/Sprint0_Ju/` con Android Studio, compilar e instalar en un móvil real con Bluetooth Low Energy.
+
+### Arduino
+
+Abrir `src/arduino/HolaMundoIBeacon/HolaMundoIBeacon.ino`, seleccionar la placa correspondiente y cargar el programa.
+
+## Cómo ejecutar los tests
+
+### Lógica de negocio
+
+```bash
+php src/logica/test_logica.php
+```
+
+Requiere una base de datos de pruebas correctamente configurada.
+
+### REST
+
+```bash
+php src/rest/test_rest.php
+```
+
+Requiere que el endpoint REST y la base de datos de pruebas estén disponibles.
+
+### Web
+
+```bash
+node src/web/test_logica_fake.js
+```
+
+Este test simula las respuestas HTTP y no necesita modificar `LogicaFake.js`.
+
+### Android
+
+Desde `src/android/Sprint0_Ju/` en Windows:
 
 ```text
-Tipo: O3
-Valor: 1234
+gradlew.bat test
 ```
 
-El flujo utilizado es:
+También pueden ejecutarse los tests desde Android Studio.
+
+## Criterios de aceptación
+
+Los pasos reproducibles de cada componente y el test funcional obligatorio están descritos en:
 
 ```text
-LogicaFake
-     |
-     v
-MedicionEntrada
-     |
-     v
-PeticionarioREST
-     |
-     v
-POST /mediciones
+doc/acceptance_criteria.md
 ```
 
-`PeticionarioREST` utiliza `HttpURLConnection` para enviar la medición al servidor REST.
+## Uso de IA
 
-## Interfaz web
+La carpeta `prompts/` recoge versiones consolidadas de los prompts utilizados durante el desarrollo y su relación con diseños, criterios de aceptación y revisión del resultado.
 
-La interfaz web permite visualizar la última medición almacenada.
+## Evidencias para la revisión
 
-El flujo utilizado es:
+- `author.md` identifica a la autora.
+- `doc/README.md` relaciona cada diseño con su implementación.
+- `doc/acceptance_criteria.md` define criterios de aceptación reproducibles.
+- `prompts/` documenta el uso de IA, el diseño de entrada, el criterio de aceptación y la revisión.
+- Los diseños separan comunicación, lógica de negocio, persistencia y lógica cliente.
+- La lógica de negocio del backend se mantiene independiente de HTTP.
+- Los tests disponibles están documentados en este README.
 
-```text
-app.js
-   |
-   v
-LogicaFake.js
-   |
-   v
-GET /mediciones/ultima
-   |
-   v
-Servidor REST
+
+## Test funcional obligatorio
+
+El procedimiento reproducible para validar la cadena completa
+**Arduino → Android → REST → lógica de negocio → BD → web** está en
+`doc/functional_test.md`.
+
+Después de realizar la prueba física y exportar Logcat:
+
+```bash
+python tests/functional/verificar_test_funcional.py --logcat evidencia_logcat.txt --web-confirmada
 ```
 
-La interfaz muestra:
-
-```text
-Fecha
-Tipo
-Valor
-```
-
-También dispone de un botón:
-
-```text
-Actualizar
-```
-
-que vuelve a solicitar la última medición disponible.
-
-## Pruebas realizadas
-
-### Pruebas de la lógica de negocio
-
-Se ha comprobado:
-
-- validación de una medición correcta;
-- rechazo de un tipo incorrecto;
-- almacenamiento de una medición;
-- recuperación de la última medición.
-
-### Pruebas del servidor REST
-
-Se ha comprobado:
-
-- funcionamiento de `POST /mediciones`;
-- funcionamiento de `GET /mediciones/ultima`;
-- comunicación entre REST y lógica de negocio;
-- almacenamiento real en la base de datos.
-
-### Pruebas de Android
-
-Se ha comprobado el envío de una medición fake:
-
-```text
-O3 = 1234
-```
-
-desde Android hasta el servidor REST.
-
-Se ha verificado que la medición queda almacenada correctamente en la base de datos.
-
-### Pruebas de la interfaz web
-
-Se ha comprobado:
-
-- obtención de la última medición mediante REST;
-- representación de la fecha;
-- representación del tipo;
-- representación del valor;
-- funcionamiento del botón `Actualizar`.
-
-## Flujo validado
-
-Durante el Sprint 0 se ha validado correctamente el siguiente flujo:
-
-```text
-Android
-   |
-   v
-REST
-   |
-   v
-Lógica de negocio
-   |
-   v
-Base de datos
-   |
-   v
-REST
-   |
-   v
-Web
-```
-
-Esto permite comprobar la comunicación completa entre los principales componentes del sistema.
-
-## Estado actual del Sprint 0
-
-Actualmente se encuentra implementado y probado:
-
-- emisión BLE del microprocesador;
-- aplicación Android;
-- lógica fake en Android;
-- comunicación Android → REST;
-- servidor REST;
-- lógica de negocio;
-- base de datos;
-- almacenamiento de mediciones;
-- consulta de la última medición;
-- interfaz web;
-- comunicación REST → Web.
-
-## Limitaciones del Sprint 0
-
-- La medición utilizada para probar la comunicación Android → REST es una medición fake con valor `1234`.
-- La lectura BLE completa no se ha podido validar en todas las pruebas mediante un dispositivo Android físico.
-- La interfaz web muestra únicamente la última medición.
-- No se implementan operaciones de modificación de mediciones.
-- No se implementan operaciones de eliminación de mediciones.
-- No se implementan filtros ni históricos de mediciones.
+El test no se considera superado hasta que la ejecución real cumpla todos los criterios
+indicados en `doc/functional_test.md`.
 
 ## Seguridad
 
-Las credenciales reales de acceso a la base de datos no se almacenan en el repositorio.
+Las credenciales reales de la base de datos no deben almacenarse en Git. Los archivos del repositorio deben utilizar valores de ejemplo o configuración externa.
 
-Los archivos incluidos en GitHub deben utilizar valores de ejemplo como:
+## Estado de validación
+
+Se ha comprobado la emisión BLE de `JU-GTI` y la detección desde un dispositivo Android físico. También existen pruebas para lógica de negocio, REST, web y Android.
+
+Antes de cerrar el Sprint debe ejecutarse y documentarse una última prueba completa:
 
 ```text
-TU_BASE_DE_DATOS
-TU_USUARIO
-TU_PASSWORD
+Arduino -> Android -> REST -> lógica -> BD -> web
 ```
 
-Las credenciales reales solo deben configurarse en el servidor utilizado para el despliegue.
+y comprobar que el valor mostrado al final sigue siendo `O3 = 1234`.

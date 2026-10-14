@@ -26,6 +26,10 @@
 // pone al revés el contenido de una array en el mismo array
 // ----------------------------------------------------
 template< typename T >
+// ------------------------------------------------------------
+// T * p, int n --> alReves() --> resultado: T *
+// Diseño lógico de la operación de infraestructura BLE.
+// ------------------------------------------------------------
 T *  alReves( T * p, int n ) {
   T aux;
 
@@ -41,6 +45,10 @@ T *  alReves( T * p, int n ) {
 // stringAUint8AlReves()
 //
 // Copia una cadena a un array uint8_t invirtiendo el orden de sus bytes.
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// const char * pString, uint8_t * pUint, int tamMax --> stringAUint8AlReves() --> resultado: uint8_t *
+// Diseño lógico de la operación de infraestructura BLE.
 // ------------------------------------------------------------
 uint8_t * stringAUint8AlReves( const char * pString, uint8_t * pUint, int tamMax ) {
 
@@ -124,6 +132,10 @@ public:
 	// .........................................................
 	// CHR_PROPS_WRITE , CHR_PROPS_READ ,  CHR_PROPS_NOTIFY 
 	// .........................................................
+	// ------------------------------------------------------------
+	// uint8_t props --> asignarPropiedades() -->
+	// Diseño lógico de la operación de infraestructura BLE.
+	// ------------------------------------------------------------
 	void asignarPropiedades ( uint8_t props ) {
 	  // no puedo escribir AUN si el constructor llama a esto: Serial.println( " laCaracteristica.setProperties( props ); ");
 	  (*this).laCaracteristica.setProperties( props );
@@ -132,6 +144,10 @@ public:
 	// .........................................................
 	// BleSecurityMode::SECMODE_OPEN  , BleSecurityMode::SECMODE_NO_ACCESS
 	// .........................................................
+	// ------------------------------------------------------------
+	// SecureMode_t permisoRead, SecureMode_t permisoWrite --> asignarPermisos() -->
+	// Diseño lógico de la operación de infraestructura BLE.
+	// ------------------------------------------------------------
 	void asignarPermisos( SecureMode_t permisoRead, SecureMode_t permisoWrite ) {
 	  // no puedo escribir AUN si el constructor llama a esto: Serial.println( "laCaracteristica.setPermission( permisoRead, permisoWrite ); " );
 	  (*this).laCaracteristica.setPermission( permisoRead, permisoWrite );
@@ -141,6 +157,10 @@ public:
 	// asignarTamanyoDatos()
 	//
 	// Establece el tamaño máximo de datos admitido por la característica.
+	// ------------------------------------------------------------
+	// ------------------------------------------------------------
+	// uint8_t tam --> asignarTamanyoDatos() -->
+	// Diseño lógico de la operación de infraestructura BLE.
 	// ------------------------------------------------------------
 	void asignarTamanyoDatos( uint8_t tam ) {
 	  // no puedo escribir AUN si el constructor llama a esto: Serial.print( " (*this).laCaracteristica.setFixedLen( tam = " );
@@ -170,6 +190,10 @@ public:
 	//
 	// Escribe la cadena recibida en la característica y devuelve el número de bytes escritos.
 	// ------------------------------------------------------------
+	// ------------------------------------------------------------
+	// const char * str --> escribirDatos() --> resultado: uint16_t
+	// Diseño lógico de la operación de infraestructura BLE.
+	// ------------------------------------------------------------
 	uint16_t escribirDatos( const char * str ) {
 	  // Serial.print( " return (*this).laCaracteristica.write( str  = " );
 	  // Serial.println( str );
@@ -186,6 +210,10 @@ public:
 	//
 	// Envía una notificación BLE con los datos recibidos.
 	// ------------------------------------------------------------
+	// ------------------------------------------------------------
+	// const char * str --> notificarDatos() --> resultado: uint16_t
+	// Diseño lógico de la operación de infraestructura BLE.
+	// ------------------------------------------------------------
 	uint16_t notificarDatos( const char * str ) {
 	  
 	  uint16_t r = laCaracteristica.notify( &str[0] );
@@ -198,6 +226,10 @@ public:
 	//
 	// Registra el callback que se ejecutará cuando la característica sea escrita.
 	// ------------------------------------------------------------
+	// ------------------------------------------------------------
+	// CallbackCaracteristicaEscrita cb --> instalarCallbackCaracteristicaEscrita() -->
+	// Diseño lógico de la operación de infraestructura BLE.
+	// ------------------------------------------------------------
 	void instalarCallbackCaracteristicaEscrita( CallbackCaracteristicaEscrita cb ) {
 	  (*this).laCaracteristica.setWriteCallback( cb );
 	} // ()
@@ -206,6 +238,10 @@ public:
 	// activar()
 	//
 	// Inicializa la característica BLE y registra el resultado por el puerto serie.
+	// ------------------------------------------------------------
+	// ------------------------------------------------------------
+	// --> activar() -->
+	// Diseño lógico de la operación de infraestructura BLE.
 	// ------------------------------------------------------------
 	void activar() {
 	  err_t error = (*this).laCaracteristica.begin();
@@ -257,6 +293,10 @@ public:
   //
   // Muestra por el puerto serie el UUID asociado al servicio.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // --> escribeUUID() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void escribeUUID() {
 	Serial.println ( "**********" );
 	for (int i=0; i<= 15; i++) {
@@ -270,6 +310,10 @@ public:
   //
   // Añade una característica a la colección interna del servicio.
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // Caracteristica & car --> anyadirCaracteristica() -->
+  // Diseño lógico de la operación de infraestructura BLE.
+  // ------------------------------------------------------------
   void anyadirCaracteristica( Caracteristica & car ) {
 	(*this).lasCaracteristicas.push_back( & car );
   } // ()
@@ -278,6 +322,10 @@ public:
   // activarServicio()
   //
   // Inicializa el servicio BLE y activa todas sus características.
+  // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // --> activarServicio() -->
+  // Diseño lógico de la operación de infraestructura BLE.
   // ------------------------------------------------------------
   void activarServicio( ) {
 	// entiendo que al llegar aquí ya ha sido configurado

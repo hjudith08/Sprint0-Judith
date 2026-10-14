@@ -34,27 +34,28 @@ public class PeticionarioREST {
 
     private static final String URL_MEDICIONES =
             "https://jcivapo.upv.edu.es/rest/index.php/mediciones";
-
-    /**
-     * Callback utilizado para devolver el resultado de la petición.
-     */
+    // ------------------------------------------------------------
+    // RespuestaCallback
+    //
+    // Define la operación de retorno utilizada para comunicar el resultado
+    // de una petición REST al código llamador.
+    // ------------------------------------------------------------
     public interface RespuestaCallback {
 
-        void onRespuesta(boolean exito, String mensaje);
+        // ------------------------------------------------------------
+        // exito: B, mensaje: Text --> onRespuesta() -->
+        // Entrega al llamador el resultado de la petición REST.
+        // ------------------------------------------------------------
+void onRespuesta(boolean exito, String mensaje);
     }
 
-
-    /**
-     * enviarMedicion()
-     *
-     * Envía una medición al servidor REST mediante HTTP POST.
-     *
-     * Entrada:
-     *      medicion -> medición que se quiere enviar.
-     *
-     * Salida:
-     *      callback -> resultado recibido desde el servidor.
-     */
+    // ------------------------------------------------------------
+    // medicion: MedicionEntrada, callback: RespuestaCallback
+    //      --> enviarMedicion() -->
+    //
+    // Envía una medición al servidor REST mediante HTTP POST y entrega
+    // el resultado de forma asíncrona mediante el callback.
+    // ------------------------------------------------------------
     public void enviarMedicion(
             MedicionEntrada medicion,
             RespuestaCallback callback
@@ -209,12 +210,12 @@ public class PeticionarioREST {
         }).start();
     }
 
-
-    /**
-     * devolverResultado()
-     *
-     * Devuelve el resultado al hilo principal de Android.
-     */
+    // ------------------------------------------------------------
+    // callback: RespuestaCallback, exito: B, mensaje: Text
+    //      --> devolverResultado() -->
+    //
+    // Publica el resultado en el hilo principal de Android.
+    // ------------------------------------------------------------
     private void devolverResultado(
             RespuestaCallback callback,
             boolean exito,

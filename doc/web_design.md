@@ -55,7 +55,7 @@ El campo `id` forma parte de la medición recibida, pero no se mostrará en la i
 |
 | urlUltimaMedicion: Text
 |
-leerUltimaMedicion() --> Medicion | null
+obtenerUltimaMedicion() --> Medicion | null
 |
 ---------------------------------------------
 ```
@@ -64,7 +64,7 @@ Responsabilidad:
 
 La lógica fake representa en el navegador la operación necesaria para obtener la última medición.
 
-`leerUltimaMedicion()` realiza una petición al servidor REST:
+`obtenerUltimaMedicion()` realiza una petición al servidor REST:
 
 ```text
 GET /mediciones/ultima
@@ -73,7 +73,7 @@ GET /mediciones/ultima
 El flujo es:
 
 ```text
-leerUltimaMedicion()
+obtenerUltimaMedicion()
         |
         v
 GET /mediciones/ultima
@@ -87,10 +87,10 @@ Medicion | null
 
 La lógica fake no accede directamente a la base de datos.
 
-### leerUltimaMedicion
+### obtenerUltimaMedicion
 
 ```text
-leerUltimaMedicion() --> Medicion | null
+obtenerUltimaMedicion() --> Medicion | null
 ```
 
 Responsabilidad:
@@ -160,7 +160,7 @@ El flujo es:
 cargarUltimaMedicion()
         |
         v
-LogicaFake.leerUltimaMedicion()
+LogicaFake.obtenerUltimaMedicion()
         |
         v
 mostrarMedicion()
@@ -302,7 +302,7 @@ El flujo correcto será:
 app.js
    |
    v
-LogicaFake.leerUltimaMedicion()
+LogicaFake.obtenerUltimaMedicion()
    |
    v
 GET /mediciones/ultima
@@ -327,7 +327,7 @@ durante este Sprint.
 - La web utiliza HTML, CSS y JavaScript.
 - La comunicación con REST se realiza mediante `LogicaFake.js`.
 - `app.js` no realiza directamente las peticiones HTTP.
-- La lógica fake proporciona `leerUltimaMedicion()`.
+- La lógica fake proporciona `obtenerUltimaMedicion()`.
 - La web utiliza `GET /mediciones/ultima`.
 - La web no accede directamente a la base de datos.
 - La web no contiene lógica de negocio real.

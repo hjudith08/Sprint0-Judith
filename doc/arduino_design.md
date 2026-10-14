@@ -99,6 +99,7 @@ La medida ficticia nace en `HolaMundoIBeacon.ino`, como exige el test funcional 
 - `major` transporta el tipo de medición en el byte alto y el contador en el byte bajo.
 - `minor` transporta el valor ficticio `1234`.
 - El contador permite al cliente Android distinguir una medición nueva de anuncios repetidos del mismo iBeacon.
+- El ciclo de publicación del Sprint 0 se ha ajustado a aproximadamente 10 segundos entre mediciones para facilitar la demostración y evitar registros excesivos.
 - La lectura analógica real del sensor no se utiliza para el criterio de aceptación del Sprint 0.
 
 ## 3. Reglas Generales

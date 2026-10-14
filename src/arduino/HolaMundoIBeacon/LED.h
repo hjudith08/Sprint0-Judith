@@ -16,6 +16,7 @@
 
 // ------------------------------------------------------------
 // esperar()
+// tiempo: N --> esperar() -->
 //
 // Bloquea la ejecución durante el tiempo indicado en milisegundos.
 // ------------------------------------------------------------
@@ -34,7 +35,8 @@ public:
 
   // ------------------------------------------------------------
   // LED()
-  //
+// numero: N --> LED() --> led: LED
+//
   // Configura el pin indicado como salida y deja el LED inicialmente apagado.
   // ------------------------------------------------------------
   LED (int numero)
@@ -46,7 +48,8 @@ public:
 
   // ------------------------------------------------------------
   // encender()
-  //
+// --> encender() -->
+//
   // Enciende el LED y actualiza su estado interno.
   // ------------------------------------------------------------
   void encender () {
@@ -56,7 +59,8 @@ public:
 
   // ------------------------------------------------------------
   // apagar()
-  //
+// --> apagar() -->
+//
   // Apaga el LED y actualiza su estado interno.
   // ------------------------------------------------------------
   void apagar () {
@@ -66,7 +70,8 @@ public:
 
   // ------------------------------------------------------------
   // alternar()
-  //
+// --> alternar() -->
+//
   // Cambia el LED al estado contrario al actual.
   // ------------------------------------------------------------
   void alternar () {
@@ -79,7 +84,8 @@ public:
 
   // ------------------------------------------------------------
   // brillar()
-  //
+// tiempo: N --> brillar() -->
+//
   // Enciende el LED durante el tiempo indicado y después lo apaga.
   // ------------------------------------------------------------
   void brillar (long tiempo) {

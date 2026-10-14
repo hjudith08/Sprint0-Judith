@@ -13,6 +13,10 @@
 
 class LogicaFake {
 
+    // ----------------------------------------------------
+    // --> constructor() --> logica: LogicaFake
+    // Inicializa la URL utilizada para recuperar la última medición.
+    // ----------------------------------------------------
     constructor() {
 
         this.urlUltimaMedicion =
@@ -22,7 +26,7 @@ class LogicaFake {
 
     /*
     ----------------------------------------------------
-    leerUltimaMedicion()
+    obtenerUltimaMedicion()
 
     Solicita al servidor REST la última medición almacenada.
 
@@ -34,7 +38,7 @@ class LogicaFake {
     ----------------------------------------------------
     */
 
-    async leerUltimaMedicion() {
+    async obtenerUltimaMedicion() {
 
         const respuesta =
             await fetch(
@@ -56,11 +60,11 @@ class LogicaFake {
 
         if (datos.mensaje) {
 
-            return null;
+            return [];
         }
 
 
-        return datos;
+        return [datos];
     }
 }
 

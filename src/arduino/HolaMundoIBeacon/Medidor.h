@@ -50,14 +50,18 @@ private:
 public:
 
   // .....................................................
-  // constructor
+  // Medidor()
+  // --> Medidor() --> medidor: Medidor
+  //
+  // Crea el objeto medidor sin iniciar todavía las entradas analógicas.
   // .....................................................
   Medidor(  ) {
   } // ()
 
   // ------------------------------------------------------------
   // iniciarMedidor()
-  //
+// --> iniciarMedidor() -->
+//
   // Configura las entradas analógicas y establece el ADC a 12 bits.
   // ------------------------------------------------------------
   void iniciarMedidor() {
@@ -74,7 +78,8 @@ public:
 
   // ------------------------------------------------------------
   // medirO3()
-  //
+// --> medirO3() --> valorO3: Z
+//
   // Lee Vgas y Vref, calcula una estimación de O3 y devuelve el resultado como entero.
   // ------------------------------------------------------------
   int medirO3() {
@@ -144,7 +149,8 @@ public:
 
   // ------------------------------------------------------------
   // medirTemperatura()
-  //
+// --> medirTemperatura() --> temperatura: Z
+//
   // Devuelve el valor de temperatura utilizado actualmente como prueba.
   // ------------------------------------------------------------
   int medirTemperatura() {

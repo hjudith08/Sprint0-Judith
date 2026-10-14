@@ -63,7 +63,8 @@ public:
 
   // ------------------------------------------------------------
   // Publicador()
-  //
+// --> Publicador() --> publicador: Publicador
+//
   // Crea el publicador sin encender todavía la emisora BLE.
   // ------------------------------------------------------------
   Publicador( ) {
@@ -73,7 +74,8 @@ public:
 
   // ------------------------------------------------------------
   // encenderEmisora()
-  //
+// --> encenderEmisora() -->
+//
   // Enciende la emisora BLE utilizada por el publicador.
   // ------------------------------------------------------------
   void encenderEmisora() {
@@ -82,7 +84,8 @@ public:
 
   // ------------------------------------------------------------
   // publicarO3()
-  //
+// valorO3: Z, contador: N, tiempoEspera: N --> publicarO3() -->
+//
   // Codifica el tipo O3 y el contador en major, coloca valorO3 en minor y publica el iBeacon.
   // ------------------------------------------------------------
   void publicarO3( int16_t valorO3, uint8_t contador,
@@ -119,7 +122,8 @@ public:
 } // ()
   // ------------------------------------------------------------
   // publicarTemperatura()
-  //
+// valorTemperatura: Z, contador: N, tiempoEspera: N --> publicarTemperatura() -->
+//
   // Publica una medición de temperatura mediante iBeacon usando el contador recibido.
   // ------------------------------------------------------------
   void publicarTemperatura( int16_t valorTemperatura,
