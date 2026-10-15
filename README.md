@@ -1,253 +1,280 @@
-# Sprint0-Judith
+# Índice de diseños del Sprint 0
 
-Proyecto desarrollado para el Sprint 0 de la asignatura de Proyecto de Aplicaciones de Biometría y Medio Ambiente.
+Este directorio contiene una única especificación canónica por responsabilidad.
 
-El objetivo es comprobar la cadena completa desde una medición ficticia generada en Arduino hasta su visualización en una página web.
-
-## Flujo del Sprint 0
+El agente revisor v2 permite usar nombres prefijados como:
 
 ```text
-SparkFun Pro nRF52840 Mini
-        |
-        | BLE / iBeacon JU-GTI
-        v
-Aplicación Android (Java)
-        |
-        | POST /mediciones
-        v
-Servidor REST (PHP)
-        |
-        v
-Lógica de negocio (PHP)
-        |
-        v
-Base de datos MySQL / MariaDB
-        |
-        | GET /mediciones/ultima
-        v
-Interfaz web
+<nombre>_communication_design.md
+<nombre>_business_logic_design.md
+<nombre>_database_design.md
+<nombre>_frontend_business_logic_design.md
 ```
 
-La medición ficticia utilizada es:
+Se utiliza esa variante para mantener una correspondencia clara entre cada diseño y su implementación dentro de `src/`.
+
+| Diseño canónico | Implementación correspondiente | Responsabilidad |
+| --- | --- | --- |
+| `arduino_design.md` | `src/arduino/` | Generación y publicación BLE |
+| `android_design.md` | `src/android/` | Cliente Android BLE → REST |
+| `rest_communication_design.md` | `src/communication/` | Comunicación HTTP/JSON del backend |
+| `logica_business_logic_design.md` | `src/business_logic/` | Lógica de negocio del backend |
+| `bd_database_design.md` | `src/database/` | Persistencia relacional |
+| `web_frontend_business_logic_design.md` | `src/web/js/LogicaFake.js` | Lógica cliente/proxy web |
+| `web_design.md` | `src/web/` | Interfaz gráfica web |
+
+`acceptance_criteria.md` recoge los criterios reproducibles de aceptación y el test funcional de extremo a extremo exigido por la rúbrica.
+
+## Flujo de dependencias
 
 ```text
-Tipo: O3
-Valor: 1234
+Arduino
+   |
+   | BLE / iBeacon
+   v
+Android
+   |
+   | REST
+   v
+src/communication/
+   |
+   v
+src/business_logic/
+   |
+   v
+src/database/
+
+
+Web GUI
+   |
+   v
+LogicaFake
+   |
+   | REST
+   v
+src/communication/
 ```
 
-El valor nace en Arduino, se codifica en la trama iBeacon, Android lo recibe y lo envía al servidor REST. La lógica de negocio valida y almacena la medición. La web consulta después la última medición almacenada.
+La capa de comunicación conoce HTTP, JSON y las rutas REST.
 
-## Estructura del repositorio
+La lógica de negocio permanece independiente de HTTP y del mecanismo de transporte.
+
+La persistencia se representa mediante la tabla `Mediciones`, cuyo esquema reproducible se encuentra en:
 
 ```text
-.
-├── context/
-│   ├── Software_Engineering_Spec.md
-│   └── Database_Design_Spec.md
-├── doc/
-│   ├── README.md
-│   ├── acceptance_criteria.md
-│   ├── android_design.md
-│   ├── arduino_design.md
-│   ├── rest_communication_design.md
-│   ├── logica_business_logic_design.md
-│   ├── bd_database_design.md
-│   ├── web_frontend_business_logic_design.md
-│   └── web_design.md
-├── prompts/
-├── src/
-│   ├── android/
-│   ├── arduino/
-│   ├── business_logic/
-│   ├── communication/
-│   ├── database/
-│   └── web/
-├── tests/
-├── author.md
-└── README.md
+src/database/crear_tabla.sql
 ```
 
-### Correspondencia exacta entre diseño e implementación
-
-Se usa la variante de nombres prefijados admitida por el agente v2 para conservar la
-implementación funcional sin mover código:
-
-```text
-rest_communication_design.md          -> src/rest/
-logica_business_logic_design.md       -> src/logica/
-bd_database_design.md                 -> src/bd/
-web_frontend_business_logic_design.md -> src/web/js/LogicaFake.js
-web_design.md                         -> src/web/
-android_design.md                     -> src/android/
-arduino_design.md                     -> src/arduino/
-```
-
-De esta forma no existen diseños duplicados o ambiguos y cada documento indica de forma
-explícita qué implementación revisa.
-
-## Componentes
+## Diseños disponibles
 
 ### Arduino
 
-`src/arduino/HolaMundoIBeacon/` contiene la implementación para SparkFun Pro nRF52840 Mini. Durante el Sprint 0 publica la medición ficticia de O3 mediante un iBeacon llamado `JU-GTI`.
+```text
+arduino_design.md
+```
+
+Describe la generación de la medición ficticia:
+
+```text
+O3 = 1234
+```
+
+y su publicación mediante BLE/iBeacon.
+
+Implementación:
+
+```text
+src/arduino/
+```
 
 ### Android
 
-`src/android/Sprint0_Ju/` contiene la aplicación Java que escanea BLE, interpreta la trama iBeacon y envía la medición al REST mediante `HttpURLConnection`.
+```text
+android_design.md
+```
 
-`LogicaFake` se conserva únicamente para pruebas aisladas; el valor del test funcional completo procede de Arduino.
+Describe la recepción BLE, interpretación de la trama iBeacon y envío de la medición al servidor REST.
 
-### REST
+Implementación:
 
-`src/rest/` contiene la capa de comunicación HTTP. Las rutas principales son:
+```text
+src/android/
+```
+
+### Comunicación REST
+
+```text
+rest_communication_design.md
+```
+
+Describe las operaciones HTTP del backend:
 
 ```text
 POST /mediciones
 GET /mediciones/ultima
 ```
 
-La capa REST delega las reglas de negocio en `LogicaNegocio`.
+La capa de comunicación delega las operaciones de dominio en la lógica de negocio.
+
+Implementación:
+
+```text
+src/communication/
+```
 
 ### Lógica de negocio
 
-`src/logica/` contiene `LogicaNegocio.php`. Esta capa valida, guarda y recupera mediciones y no implementa rutas HTTP.
+```text
+logica_business_logic_design.md
+```
+
+Describe las operaciones principales:
+
+```text
+validarMedicion()
+guardarMedicion()
+obtenerUltimaMedicion()
+```
+
+Esta capa es independiente de HTTP.
+
+Implementación:
+
+```text
+src/business_logic/
+```
 
 ### Base de datos
 
-`src/bd/crear_tabla.sql` contiene el esquema reproducible de la tabla:
-
 ```text
-Mediciones(id, fecha, tipo, valor)
+bd_database_design.md
 ```
 
-### Web
+Describe la tabla:
 
-`src/web/` contiene la interfaz. `app.js` se ocupa de la presentación y utiliza `LogicaFake.js` para obtener la última medición mediante REST.
+```text
+Mediciones
+```
 
+con los campos:
 
-### Paridad frontend/backend
+```text
+id
+fecha
+tipo
+valor
+```
 
-La lógica cliente web y la lógica de negocio backend exponen la misma operación lógica:
+Implementación reproducible:
+
+```text
+src/database/crear_tabla.sql
+```
+
+### Lógica cliente web
+
+```text
+web_frontend_business_logic_design.md
+```
+
+Describe la lógica utilizada por la interfaz web para acceder al backend.
+
+La operación expuesta mantiene paridad lógica con el backend:
 
 ```text
 obtenerUltimaMedicion() --> [ Medicion ]
 ```
 
-El frontend devuelve `[]` cuando no hay datos y `[Medicion]` cuando existe una última
-medición; `app.js` consume el primer elemento para mostrarlo.
-
-## Despliegue
-
-### Base de datos
-
-1. Crear una base de datos MySQL/MariaDB.
-2. Ejecutar `src/bd/crear_tabla.sql`.
-3. Configurar en el servidor las credenciales reales sin subirlas al repositorio.
-
-### REST
-
-Desplegar el contenido necesario de `src/rest/` junto con `src/logica/` en el servidor PHP manteniendo las rutas relativas que utiliza la implementación existente.
-
-Durante el Sprint se utiliza el servidor de la UPV y las rutas públicas configuradas en el código del proyecto.
-
-### Web
-
-Desplegar `src/web/` en un servidor web y asegurar que puede acceder al endpoint REST configurado en `LogicaFake.js`.
-
-### Android
-
-Abrir `src/android/Sprint0_Ju/` con Android Studio, compilar e instalar en un móvil real con Bluetooth Low Energy.
-
-### Arduino
-
-Abrir `src/arduino/HolaMundoIBeacon/HolaMundoIBeacon.ino`, seleccionar la placa correspondiente y cargar el programa.
-
-## Cómo ejecutar los tests
-
-### Lógica de negocio
-
-```bash
-php src/logica/test_logica.php
-```
-
-Requiere una base de datos de pruebas correctamente configurada.
-
-### REST
-
-```bash
-php src/rest/test_rest.php
-```
-
-Requiere que el endpoint REST y la base de datos de pruebas estén disponibles.
-
-### Web
-
-```bash
-node src/web/test_logica_fake.js
-```
-
-Este test simula las respuestas HTTP y no necesita modificar `LogicaFake.js`.
-
-### Android
-
-Desde `src/android/Sprint0_Ju/` en Windows:
+Implementación:
 
 ```text
-gradlew.bat test
+src/web/js/LogicaFake.js
 ```
 
-También pueden ejecutarse los tests desde Android Studio.
+### Interfaz web
+
+```text
+web_design.md
+```
+
+Describe la presentación de los datos y la interacción de la interfaz.
+
+Implementación:
+
+```text
+src/web/
+```
 
 ## Criterios de aceptación
 
-Los pasos reproducibles de cada componente y el test funcional obligatorio están descritos en:
+Los criterios de aceptación del Sprint 0 se encuentran en:
 
 ```text
-doc/acceptance_criteria.md
+acceptance_criteria.md
 ```
 
-## Uso de IA
-
-La carpeta `prompts/` recoge versiones consolidadas de los prompts utilizados durante el desarrollo y su relación con diseños, criterios de aceptación y revisión del resultado.
-
-## Evidencias para la revisión
-
-- `author.md` identifica a la autora.
-- `doc/README.md` relaciona cada diseño con su implementación.
-- `doc/acceptance_criteria.md` define criterios de aceptación reproducibles.
-- `prompts/` documenta el uso de IA, el diseño de entrada, el criterio de aceptación y la revisión.
-- Los diseños separan comunicación, lógica de negocio, persistencia y lógica cliente.
-- La lógica de negocio del backend se mantiene independiente de HTTP.
-- Los tests disponibles están documentados en este README.
-
-
-## Test funcional obligatorio
-
-El procedimiento reproducible para validar la cadena completa
-**Arduino → Android → REST → lógica de negocio → BD → web** está en
-`doc/functional_test.md`.
-
-Después de realizar la prueba física y exportar Logcat:
-
-```bash
-python tests/functional/verificar_test_funcional.py --logcat evidencia_logcat.txt --web-confirmada
-```
-
-El test no se considera superado hasta que la ejecución real cumpla todos los criterios
-indicados en `doc/functional_test.md`.
-
-## Seguridad
-
-Las credenciales reales de la base de datos no deben almacenarse en Git. Los archivos del repositorio deben utilizar valores de ejemplo o configuración externa.
-
-## Estado de validación
-
-Se ha comprobado la emisión BLE de `JU-GTI` y la detección desde un dispositivo Android físico. También existen pruebas para lógica de negocio, REST, web y Android.
-
-Antes de cerrar el Sprint debe ejecutarse y documentarse una última prueba completa:
+Incluyen comprobaciones para:
 
 ```text
-Arduino -> Android -> REST -> lógica -> BD -> web
+Arduino / BLE
+Android
+Lógica de negocio
+Comunicación REST
+Lógica cliente web
+Test funcional completo
 ```
 
-y comprobar que el valor mostrado al final sigue siendo `O3 = 1234`.
+## Test funcional
+
+El procedimiento completo está documentado en:
+
+```text
+functional_test.md
+```
+
+La evidencia de la prueba realizada se encuentra en:
+
+```text
+functional_test_evidence.md
+```
+
+La cadena validada es:
+
+```text
+Arduino
+   ↓
+Android
+   ↓
+REST
+   ↓
+Lógica de negocio
+   ↓
+Base de datos
+   ↓
+Web
+```
+
+Durante la prueba se comprobó correctamente la medición ficticia:
+
+```text
+O3 = 1234
+```
+
+## Comprobación final
+
+Antes de entregar, revisar:
+
+```text
+final_checklist.md
+```
+
+El proyecto debe mantener correspondencia entre:
+
+```text
+diseño
+implementación
+tests
+criterios de aceptación
+```
+
+y conservar separadas las responsabilidades de comunicación, lógica de negocio, persistencia e interfaz.
