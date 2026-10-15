@@ -25,7 +25,7 @@ Base de datos MySQL / MariaDB
         |
         | GET /mediciones/ultima
         v
-LogicaFake
+Frontend Business Logic
         |
         v
 Interfaz web
@@ -64,8 +64,16 @@ Sprint0-Judith/
     ├── business_logic/
     ├── communication/
     ├── database/
+    ├── frontend_business_logic/
+    │   └── LogicaFake.js
     ├── microprocesador/
     └── web/
+        ├── index.html
+        ├── css/
+        ├── js/
+        │   └── app.js
+        └── tests/
+            └── test_logica_fake.js
 ```
 
 ## Correspondencia entre diseño e implementación
@@ -94,7 +102,7 @@ src/database/
 doc/frontend_business_logic_design.md
         |
         v
-src/web/js/LogicaFake.js
+src/frontend_business_logic/
 
 doc/microprocesador_design.md
         |
@@ -223,12 +231,12 @@ valor
 
 `id` es autoincremental y `fecha` utiliza `CURRENT_TIMESTAMP`.
 
-### Lógica cliente web
+### Frontend Business Logic
 
-La lógica utilizada por la interfaz web se encuentra en:
+La lógica cliente web se encuentra en:
 
 ```text
-src/web/js/LogicaFake.js
+src/frontend_business_logic/LogicaFake.js
 ```
 
 La operación principal es:
@@ -279,13 +287,13 @@ En la parte web:
 Web GUI
    |
    v
-LogicaFake
+Frontend Business Logic
    |
    v
 Communication
 ```
 
-La GUI no accede directamente al backend.
+La GUI no realiza directamente la comunicación HTTP.
 
 ## Pruebas
 
@@ -317,18 +325,18 @@ Ejecutar:
 php src/communication/test_rest.php
 ```
 
-### Web / LogicaFake
+### Frontend Business Logic
 
 Archivo:
 
 ```text
-src/web/test_logica_fake.js
+src/web/tests/test_logica_fake.js
 ```
 
 Ejecutar:
 
 ```bash
-node src/web/test_logica_fake.js
+node src/web/tests/test_logica_fake.js
 ```
 
 Este test comprueba:
@@ -379,7 +387,7 @@ Base de datos
 GET /mediciones/ultima
       |
       v
-LogicaFake
+Frontend Business Logic
       |
       v
 Interfaz web

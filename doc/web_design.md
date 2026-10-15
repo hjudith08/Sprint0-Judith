@@ -6,7 +6,7 @@ El componente `web` permite visualizar la última medición almacenada en el sis
 
 La interfaz web no accede directamente a la base de datos ni contiene lógica de negocio.
 
-La comunicación con el servidor REST se realiza mediante una lógica fake en JavaScript que representa la operación de lectura de la última medición.
+La GUI utiliza el componente `frontend_business_logic` para obtener la última medición.
 
 El flujo general del componente es:
 
@@ -14,7 +14,7 @@ El flujo general del componente es:
 Interfaz Web
      |
      v
-LogicaFake
+Frontend Business Logic
      |
      | GET /mediciones/ultima
      v
@@ -46,23 +46,25 @@ Medicion = (
 )
 ```
 
-El campo `id` forma parte de la medición recibida, pero no se mostrará en la interfaz durante el Sprint 0.
+El campo `id` forma parte de la medición recibida, pero no se muestra en la interfaz durante el Sprint 0.
 
-### LogicaFake
+### Frontend Business Logic
+
+La implementación de la lógica cliente se encuentra en:
 
 ```text
----------------- LogicaFake ----------------
-|
-| urlUltimaMedicion: Text
-|
-obtenerUltimaMedicion() --> Medicion | null
-|
----------------------------------------------
+src/frontend_business_logic/LogicaFake.js
+```
+
+La operación utilizada por la GUI es:
+
+```text
+obtenerUltimaMedicion() --> [ Medicion ]
 ```
 
 Responsabilidad:
 
-La lógica fake representa en el navegador la operación necesaria para obtener la última medición.
+La clase `LogicaFake` representa en el navegador la operación necesaria para obtener la última medición.
 
 `obtenerUltimaMedicion()` realiza una petición al servidor REST:
 
@@ -82,41 +84,16 @@ GET /mediciones/ultima
 Servidor REST
         |
         v
-Medicion | null
+[ Medicion ]
 ```
 
-La lógica fake no accede directamente a la base de datos.
-
-### obtenerUltimaMedicion
+Si no existen mediciones, la lógica cliente devuelve:
 
 ```text
-obtenerUltimaMedicion() --> Medicion | null
+[]
 ```
 
-Responsabilidad:
-
-Solicita al servidor REST la última medición almacenada.
-
-Durante el Sprint 0 se utilizará la URL:
-
-```text
-https://jcivapo.upv.edu.es/rest/index.php/mediciones/ultima
-```
-
-Si la petición es correcta, se obtiene una respuesta con una estructura similar a:
-
-```json
-{
-    "id": 5,
-    "fecha": "2026-10-04 12:54:17",
-    "tipo": "O3",
-    "valor": 1234
-}
-```
-
-Si no existen mediciones, se devuelve el mensaje proporcionado por el servidor REST.
-
-Si ocurre un error de comunicación, el error será gestionado posteriormente por la interfaz.
+Si ocurre un error de comunicación, el error se propaga para que la interfaz pueda mostrar un mensaje.
 
 ### mostrarMedicion
 
@@ -147,7 +124,7 @@ no se muestra al usuario.
 ### cargarUltimaMedicion
 
 ```text
-cargarUltimaMedicion()
+--> cargarUltimaMedicion() -->
 ```
 
 Responsabilidad:
@@ -163,7 +140,19 @@ cargarUltimaMedicion()
 LogicaFake.obtenerUltimaMedicion()
         |
         v
-mostrarMedicion()
+[ Medicion ]
+        |
+        v
+mostrarMedicion(mediciones[0])
+```
+
+Si la colección está vacía:
+
+```text
+[]
+   |
+   v
+mostrar mensaje de que no existen mediciones
 ```
 
 Si ocurre un error durante la petición:
@@ -175,19 +164,11 @@ cargarUltimaMedicion()
 mostrar mensaje de error
 ```
 
-Esta operación se realizará:
-
-```text
-al cargar la página
-
-y
-
-al pulsar el botón Actualizar
-```
+Esta operación se realiza al cargar la página y al pulsar el botón `Actualizar`.
 
 ### Estructura de la interfaz
 
-La pantalla mostrará una tarjeta sencilla con la última medición:
+La pantalla muestra una tarjeta sencilla con la última medición:
 
 ```text
 +------------------------------------------------------+
@@ -205,43 +186,9 @@ La pantalla mostrará una tarjeta sencilla con la última medición:
 +------------------------------------------------------+
 ```
 
-El botón:
-
-```text
-Actualizar
-```
-
-ejecutará:
-
-```text
-cargarUltimaMedicion()
-```
-
-y solicitará nuevamente al servidor REST la última medición disponible.
-
-### Diseño visual
-
-La interfaz tendrá un diseño sencillo para facilitar la demostración del Sprint 0.
-
-Se utilizará:
-
-```text
-fondo claro
-
-tarjeta central
-
-bordes ligeramente redondeados
-
-separación entre los datos
-
-botón Actualizar
-```
-
-No se añadirán elementos visuales ni funcionalidades que no sean necesarias para demostrar el funcionamiento de la arquitectura.
-
 ### Archivos del componente
 
-La estructura será:
+La estructura de la GUI es:
 
 ```text
 src/web/
@@ -251,52 +198,32 @@ src/web/
 ├── css/
 |   └── style.css
 |
-└── js/
-    ├── LogicaFake.js
-    └── app.js
+├── js/
+|   └── app.js
+|
+└── tests/
+    └── test_logica_fake.js
 ```
 
-`index.html`:
+La lógica cliente utilizada por la GUI se encuentra separada en:
 
 ```text
-estructura de la interfaz
+src/frontend_business_logic/LogicaFake.js
 ```
 
-`style.css`:
+`index.html` define la estructura de la interfaz.
 
-```text
-presentación visual de la página
-```
+`style.css` define la presentación visual.
 
-`LogicaFake.js`:
+`app.js` controla la interfaz, representa los datos y gestiona el botón `Actualizar`.
 
-```text
-comunicación con el servidor REST
-+
-obtención de la última medición
-```
-
-`app.js`:
-
-```text
-control de la interfaz
-+
-representación de los datos
-+
-gestión del botón Actualizar
-```
+`test_logica_fake.js` prueba automáticamente la lógica cliente.
 
 ### Comunicación con REST
 
-La interfaz utiliza únicamente:
+La interfaz no realiza directamente las peticiones HTTP.
 
-```text
-GET /mediciones/ultima
-```
-
-La petición HTTP no se realiza directamente desde `app.js`.
-
-El flujo correcto será:
+El flujo correcto es:
 
 ```text
 app.js
@@ -311,26 +238,17 @@ GET /mediciones/ultima
 Servidor REST
 ```
 
-La web no realiza operaciones de:
-
-```text
-POST
-PUT
-DELETE
-```
-
-durante este Sprint.
+La web no realiza operaciones `POST`, `PUT` ni `DELETE` durante este Sprint.
 
 ## 2. Aclaraciones del Diseño
 
-- La página principal será `index.html`.
+- La página principal es `index.html`.
 - La web utiliza HTML, CSS y JavaScript.
-- La comunicación con REST se realiza mediante `LogicaFake.js`.
-- `app.js` no realiza directamente las peticiones HTTP.
-- La lógica fake proporciona `obtenerUltimaMedicion()`.
+- La lógica cliente está en `src/frontend_business_logic/LogicaFake.js`.
+- `app.js` no realiza directamente peticiones HTTP.
+- La lógica cliente proporciona `obtenerUltimaMedicion()`.
 - La web utiliza `GET /mediciones/ultima`.
 - La web no accede directamente a la base de datos.
-- La web no contiene lógica de negocio real.
 - Al cargar la página se solicita automáticamente la última medición.
 - El botón `Actualizar` vuelve a solicitar la última medición.
 - La interfaz muestra únicamente `fecha`, `tipo` y `valor`.
@@ -343,11 +261,9 @@ durante este Sprint.
 
 - **Lenguaje de programación:** HTML5, CSS y JavaScript.
 - **Encabezados de funciones/métodos:** cada función o método incluye su diseño lógico en un bloque de comentarios delimitado por líneas `--------------------`.
-- **Legibilidad del código:** el código debe ser lo más claro y autoexplicativo posible, sin apenas comentarios adicionales.
-- **Separación de responsabilidades:** HTML define la estructura, CSS la presentación, `LogicaFake.js` la comunicación REST y `app.js` controla la interfaz.
-- **Comunicación REST:** las peticiones se realizarán mediante `fetch()`.
+- **Legibilidad del código:** el código debe ser lo más claro y autoexplicativo posible.
+- **Separación de responsabilidades:** HTML define la estructura, CSS la presentación, `LogicaFake.js` encapsula la comunicación REST y `app.js` controla la interfaz.
 - **Acceso a datos:** la interfaz web nunca accede directamente a la base de datos.
-- **Simplicidad:** no se utilizarán frameworks ni librerías externas innecesarias.
+- **Simplicidad:** no se utilizan frameworks ni librerías externas innecesarias.
 - **Correspondencia diseño-código:** la implementación debe respetar este diseño.
-- **Pruebas automatizadas:** se generan pruebas unitarias o de integración para las funciones principales.
-- **Pruebas mínimas:** se comprobará la obtención de la última medición, su representación en pantalla, el funcionamiento del botón `Actualizar` y la gestión de errores.
+- **Pruebas automatizadas:** `src/web/tests/test_logica_fake.js` prueba la obtención de la última medición, la colección vacía y los errores HTTP.

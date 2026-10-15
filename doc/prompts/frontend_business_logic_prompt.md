@@ -6,12 +6,26 @@ Consultar `doc/frontend_business_logic_design.md` y `doc/web_design.md`.
 
 ## Prompt de trabajo
 
-> Implementa una lógica cliente JavaScript llamada `LogicaFake` que encapsule la petición `GET /mediciones/ultima`. Debe ofrecer `obtenerUltimaMedicion()` a la interfaz, devolver la medición recibida o `null` si el servidor indica que no existen mediciones, y lanzar un error en respuestas HTTP incorrectas. La GUI no debe acceder directamente a la base de datos.
+> Implementa una lógica cliente JavaScript llamada `LogicaFake` en `src/frontend_business_logic/LogicaFake.js` que encapsule la petición `GET /mediciones/ultima`. Debe ofrecer `obtenerUltimaMedicion()` a la interfaz y mantener la misma firma lógica que la operación equivalente del backend. Debe devolver una colección `[ Medicion ]` cuando exista una medición, devolver `[]` cuando el servidor indique que no existen mediciones y lanzar un error en respuestas HTTP incorrectas. La GUI no debe ejecutar `fetch()` directamente ni acceder a la base de datos.
 
 ## Criterio de aceptación
 
-`app.js` obtiene los datos a través de `LogicaFake`, y las pruebas cubren respuesta con medición, respuesta vacía y error HTTP.
+`src/web/js/app.js` obtiene los datos exclusivamente a través de `LogicaFake`.
+
+Las pruebas deben cubrir:
+
+```text
+respuesta con una medición
+respuesta sin mediciones
+error HTTP
+```
 
 ## Revisión del resultado
 
-Se compara la implementación con el diseño y se ejecuta `node src/frontend_business_logic/tests/LogicaFakeTest.js`.
+Se compara la implementación con `frontend_business_logic_design.md` y `business_logic_design.md` para comprobar la paridad de la operación `obtenerUltimaMedicion()`.
+
+Después se ejecuta:
+
+```bash
+node src/web/tests/test_logica_fake.js
+```
