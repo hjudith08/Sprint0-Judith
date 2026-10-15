@@ -8,7 +8,7 @@
 // Aportación: comunicación Web -> GET /mediciones/ultima y soporte para pruebas
 //             automáticas.
 // --------------------------------------------------------------
-// src/web/js/LogicaFake.js
+// src/frontend_business_logic/LogicaFake.js
 
 
 class LogicaFake {
