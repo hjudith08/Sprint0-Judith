@@ -7,7 +7,7 @@
 // Aportación: pruebas de medición válida, ausencia de datos y error HTTP.
 // --------------------------------------------------------------
 
-const LogicaFake = require("./js/LogicaFake.js");
+const LogicaFake = require("../../frontend_business_logic/LogicaFake.js");
 
 let fallos = 0;
 
