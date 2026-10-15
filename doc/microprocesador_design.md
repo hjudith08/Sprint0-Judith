@@ -1,8 +1,14 @@
-# Diseño del componente: arduino
+# Diseño del componente: microprocesador
 
 ## 1. Diseño del Componente
 
-El componente `arduino` genera la medición ficticia requerida por el Sprint 0 y la publica mediante un iBeacon BLE desde la SparkFun Pro nRF52840 Mini.
+El componente `microprocesador` genera la medición ficticia requerida por el Sprint 0 y la publica mediante un iBeacon BLE desde la SparkFun Pro nRF52840 Mini.
+
+La implementación correspondiente se encuentra en:
+
+```text
+src/microprocesador/
+```
 
 El flujo funcional es:
 
@@ -40,9 +46,7 @@ MedicionesID = { O3, TEMPERATURA, RUIDO }
                  | beaconUUID: [ N ]_16
                  | RSSI: Z
                  |
-                 |
             encenderEmisora() -->
-                 |
                  |
 valorO3: Z,      |
 contador: N,  --> publicarO3() -->
@@ -85,11 +89,13 @@ loop()
 repetir
 ```
 
-La medida ficticia nace en `HolaMundoIBeacon.ino`, como exige el test funcional del Sprint 0.
+La medida ficticia nace en el programa del microprocesador incluido dentro de `src/microprocesador/`.
 
 ### Infraestructura reutilizada
 
-`EmisoraBLE`, `LED`, `PuertoSerie` y `ServicioEnEmisora` proceden de la base docente y se reutilizan como infraestructura. `Medidor` queda preparado para una futura lectura analógica del ULPSM-O3, pero la medición física no forma parte del test funcional de este Sprint 0.
+`EmisoraBLE`, `LED`, `PuertoSerie` y el resto de clases docentes se reutilizan como infraestructura.
+
+`Medidor` queda preparado para una futura lectura analógica del sensor, pero la medición física no forma parte del criterio funcional del Sprint 0.
 
 ## 2. Aclaraciones del Diseño
 
@@ -98,8 +104,8 @@ La medida ficticia nace en `HolaMundoIBeacon.ino`, como exige el test funcional 
 - El identificador lógico de O3 es `11`.
 - `major` transporta el tipo de medición en el byte alto y el contador en el byte bajo.
 - `minor` transporta el valor ficticio `1234`.
-- El contador permite al cliente Android distinguir una medición nueva de anuncios repetidos del mismo iBeacon.
-- El ciclo de publicación del Sprint 0 se ha ajustado a aproximadamente 10 segundos entre mediciones para facilitar la demostración y evitar registros excesivos.
+- El contador permite al cliente Android distinguir una medición nueva de anuncios repetidos.
+- El ciclo de publicación del Sprint 0 está ajustado aproximadamente a 10 segundos.
 - La lectura analógica real del sensor no se utiliza para el criterio de aceptación del Sprint 0.
 
 ## 3. Reglas Generales
@@ -107,4 +113,4 @@ La medida ficticia nace en `HolaMundoIBeacon.ino`, como exige el test funcional 
 - **Lenguaje de programación:** C++ para Arduino.
 - **Encabezados de funciones/métodos:** cada función o método propio del Sprint incluye su diseño lógico en un bloque de comentarios delimitado por líneas `--------------------`.
 - **Legibilidad del código:** se conserva el código docente y se realizan únicamente las adaptaciones necesarias para el Sprint 0.
-- **Pruebas automatizadas:** las partes puramente hardware/BLE se validan mediante el test funcional de integración; la cadena posterior dispone de tests automáticos en Android, REST, lógica y web.
+- **Pruebas:** las partes puramente hardware/BLE se validan mediante la prueba funcional de integración; la cadena posterior dispone de tests en Android, REST, lógica y web.

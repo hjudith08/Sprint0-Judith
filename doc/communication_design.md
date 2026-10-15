@@ -1,13 +1,18 @@
-# Diseño del componente: rest — communication
+# Diseño del componente: communication
 
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **capa de comunicación** del backend.
-El prefijo `rest` identifica directamente su implementación en `src/communication/`.
 
-La responsabilidad de este componente es recibir peticiones HTTP/JSON, transformar la entrada
-al tipo de dominio correspondiente e invocar la lógica de negocio. No contiene reglas de dominio
-ni realiza consultas SQL de negocio por su cuenta.
+La implementación correspondiente se encuentra en:
+
+```text
+src/communication/
+```
+
+La responsabilidad de este componente es recibir peticiones HTTP/JSON, transformar la entrada al tipo de dominio correspondiente e invocar la lógica de negocio.
+
+No contiene reglas de dominio ni realiza consultas SQL de negocio por su cuenta.
 
 ### Tipos lógicos usados
 
@@ -31,25 +36,27 @@ GET /mediciones/ultima --> mediciones: [ Medicion ]
 HTTP / JSON
     |
     v
-rest / communication       [src/communication/]
+communication
+[src/communication/]
     |
     v
-logica / business_logic    [src/business_logic/]
+business_logic
+[src/business_logic/]
     |
     v
-bd / database              [tabla Mediciones]
+database
+[tabla Mediciones]
 ```
 
 ## 2. Aclaraciones del Diseño
 
-- `POST /mediciones` recibe únicamente `tipo` y `valor`.
+- `POST /mediciones` recibe `tipo` y `valor`.
 - `POST /mediciones` delega en `LogicaNegocio.guardarMedicion()`.
 - `GET /mediciones/ultima` delega en `LogicaNegocio.obtenerUltimaMedicion()`.
 - `id` y `fecha` los genera la base de datos.
 - `major`, `minor`, RSSI y demás detalles BLE no pertenecen a esta capa.
 - La capa de comunicación puede conocer HTTP, JSON, rutas y códigos de estado.
 - La lógica de negocio no depende de esta capa.
-- La implementación correspondiente está en `src/communication/`.
 
 ## 3. Reglas Generales
 

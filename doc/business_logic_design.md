@@ -1,12 +1,16 @@
-# Diseño del componente: logica — business_logic
+# Diseño del componente: business_logic
 
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **lógica de negocio** del backend.
-El prefijo `logica` identifica directamente su implementación en `src/business_logic/`.
 
-Este componente es independiente de HTTP, rutas, códigos de estado, cabeceras, sockets y
-cualquier otro mecanismo de transporte.
+La implementación correspondiente se encuentra en:
+
+```text
+src/business_logic/
+```
+
+Este componente es independiente de HTTP, rutas, códigos de estado, cabeceras y cualquier otro mecanismo de transporte.
 
 ### Tipos lógicos
 
@@ -34,19 +38,19 @@ resultado: ResultadoOperacion <--
 
 ### Relación con la base de datos
 
-`guardarMedicion()` persiste `tipo` y `valor` en `Mediciones`.
-`obtenerUltimaMedicion()` consulta `id`, `fecha`, `tipo` y `valor` de esa tabla.
+`guardarMedicion()` persiste `tipo` y `valor` en la tabla `Mediciones`.
+
+`obtenerUltimaMedicion()` consulta `id`, `fecha`, `tipo` y `valor`.
 
 ## 2. Aclaraciones del Diseño
 
-- `validarMedicion()` acepta el tipo permitido por el Sprint y un valor válido.
+- `validarMedicion()` comprueba que la medición sea válida.
 - `guardarMedicion()` valida antes de insertar.
 - `obtenerUltimaMedicion()` recupera la medición con el `id` más alto.
-- Si no existen mediciones, devuelve la colección vacía prevista por la implementación.
+- Si no existen mediciones, devuelve una colección vacía.
 - La persistencia está alineada con `database_design.md`.
 - Los detalles BLE no forman parte de la lógica de negocio.
 - No existen dependencias desde `src/business_logic/` hacia `src/communication/`.
-- La implementación correspondiente está en `src/business_logic/`.
 
 ## 3. Reglas Generales
 

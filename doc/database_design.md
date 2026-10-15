@@ -1,9 +1,14 @@
-# Diseño del componente: bd — database
+# Diseño del componente: database
 
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **base de datos relacional**.
-El prefijo `bd` identifica directamente su implementación reproducible en `src/database/`.
+
+La implementación reproducible se encuentra en:
+
+```text
+src/database/crear_tabla.sql
+```
 
 ```text
 ====================================================================================
@@ -40,8 +45,8 @@ MedicionEntrada = ( tipo: Text, valor: R )
 - `fecha` se genera mediante `CURRENT_TIMESTAMP`.
 - `tipo` y `valor` proceden de `MedicionEntrada`.
 - `major` y `minor` son datos de transporte BLE y no se persisten.
-- El SQL reproducible del esquema está en `src/database/database.sql`.
-- La lógica de negocio que usa esta tabla se especifica en `business_logic_design.md`.
+- El SQL reproducible del esquema está en `src/database/crear_tabla.sql`.
+- La lógica de negocio que utiliza esta tabla se especifica en `business_logic_design.md`.
 
 ## 3. Reglas Generales
 
