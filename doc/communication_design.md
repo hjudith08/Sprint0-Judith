@@ -3,7 +3,7 @@
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **capa de comunicación** del backend.
-El prefijo `rest` identifica directamente su implementación en `src/rest/`.
+El prefijo `rest` identifica directamente su implementación en `src/communication/`.
 
 La responsabilidad de este componente es recibir peticiones HTTP/JSON, transformar la entrada
 al tipo de dominio correspondiente e invocar la lógica de negocio. No contiene reglas de dominio
@@ -31,10 +31,10 @@ GET /mediciones/ultima --> mediciones: [ Medicion ]
 HTTP / JSON
     |
     v
-rest / communication       [src/rest/]
+rest / communication       [src/communication/]
     |
     v
-logica / business_logic    [src/logica/]
+logica / business_logic    [src/business_logic/]
     |
     v
 bd / database              [tabla Mediciones]
@@ -49,11 +49,11 @@ bd / database              [tabla Mediciones]
 - `major`, `minor`, RSSI y demás detalles BLE no pertenecen a esta capa.
 - La capa de comunicación puede conocer HTTP, JSON, rutas y códigos de estado.
 - La lógica de negocio no depende de esta capa.
-- La implementación correspondiente está en `src/rest/`.
+- La implementación correspondiente está en `src/communication/`.
 
 ## 3. Reglas Generales
 
 - **Lenguaje de programación:** PHP.
 - **Encabezados de funciones/métodos:** cada función o método debe incluir su diseño lógico en un bloque delimitado por líneas `--------------------`.
 - **Legibilidad del código:** separar recepción HTTP/JSON, delegación en negocio y construcción de la respuesta.
-- **Pruebas automatizadas:** `src/rest/test_rest.php` cubre las operaciones REST principales del Sprint 0.
+- **Pruebas automatizadas:** `src/communication/test_rest.php` cubre las operaciones REST principales del Sprint 0.

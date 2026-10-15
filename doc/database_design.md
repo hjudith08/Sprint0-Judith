@@ -3,7 +3,7 @@
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **base de datos relacional**.
-El prefijo `bd` identifica directamente su implementación reproducible en `src/bd/`.
+El prefijo `bd` identifica directamente su implementación reproducible en `src/database/`.
 
 ```text
 ====================================================================================
@@ -40,12 +40,12 @@ MedicionEntrada = ( tipo: Text, valor: R )
 - `fecha` se genera mediante `CURRENT_TIMESTAMP`.
 - `tipo` y `valor` proceden de `MedicionEntrada`.
 - `major` y `minor` son datos de transporte BLE y no se persisten.
-- El SQL reproducible del esquema está en `src/bd/crear_tabla.sql`.
-- La lógica de negocio que usa esta tabla se especifica en `logica_business_logic_design.md`.
+- El SQL reproducible del esquema está en `src/database/database.sql`.
+- La lógica de negocio que usa esta tabla se especifica en `business_logic_design.md`.
 
 ## 3. Reglas Generales
 
 - **Lenguaje de programación:** SQL compatible con MySQL/MariaDB.
 - **Encabezados de funciones/métodos:** si se añadieran procedimientos o funciones SQL, incluirían su diseño lógico dentro de un bloque `--------------------`.
 - **Legibilidad del código:** mantener nombres de dominio claros y evitar complejidad innecesaria.
-- **Pruebas automatizadas:** la persistencia se comprueba desde `src/logica/test_logica.php` y mediante las pruebas de integración REST.
+- **Pruebas automatizadas:** la persistencia se comprueba desde `src/business_logic/test_logica.php` y mediante las pruebas de integración REST.

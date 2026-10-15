@@ -6,7 +6,7 @@ Este documento especifica la **lógica de negocio del cliente web** consumida po
 El prefijo `web` identifica directamente su implementación dentro de `src/web/`.
 
 La GUI no realiza directamente la comunicación HTTP. La clase `LogicaFake`, ubicada en
-`src/web/js/LogicaFake.js`, encapsula la lectura del backend y ofrece a `app.js` la operación
+`src/frontend_business_logic/LogicaFake.js`, encapsula la lectura del backend y ofrece a `app.js` la operación
 necesaria para obtener la última medición.
 
 ### Tipo de dominio utilizado
@@ -42,7 +42,7 @@ la contraparte del backend.
 ## 2. Aclaraciones del Diseño
 
 - La GUI (`src/web/js/app.js`) no contiene la URL del REST ni ejecuta `fetch()` directamente.
-- `src/web/js/LogicaFake.js` encapsula `GET /mediciones/ultima`.
+- `src/frontend_business_logic/LogicaFake.js` encapsula `GET /mediciones/ultima`.
 - Si el servidor indica que no existen mediciones, la lógica cliente devuelve `[]`.
 - Una respuesta HTTP incorrecta produce un error que la GUI puede gestionar.
 - La implementación correspondiente está dentro de `src/web/`.
@@ -53,7 +53,7 @@ la contraparte del backend.
 - **Lenguaje de programación:** JavaScript.
 - **Encabezados de funciones/métodos:** cada función o método debe incluir su diseño lógico en un bloque delimitado por líneas `--------------------`.
 - **Legibilidad del código:** mantener separados acceso al backend y representación de la interfaz.
-- **Pruebas automatizadas:** `src/web/test_logica_fake.js` cubre respuesta con medición, ausencia de mediciones y error HTTP.
+- **Pruebas automatizadas:** `src/frontend_business_logic/tests/LogicaFakeTest.js` cubre respuesta con medición, ausencia de mediciones y error HTTP.
 
 ## Paridad nominal de interfaz
 

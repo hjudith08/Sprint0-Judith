@@ -6,7 +6,7 @@ Consultar el archivo correspondiente de `doc/` antes de generar implementación.
 
 ## Prompt de trabajo
 
-> Implementa el componente REST descrito en `rest_communication_design.md`. Debe exponer `POST /mediciones` y `GET /mediciones/ultima`, validar la forma básica del JSON y delegar las reglas de negocio en `LogicaNegocio`. No accedas directamente a la base de datos salvo para crear/inyectar la conexión. Añade pruebas de integración de ambas rutas.
+> Implementa el componente REST descrito en `communication_design.md`. Debe exponer `POST /mediciones` y `GET /mediciones/ultima`, validar la forma básica del JSON y delegar las reglas de negocio en `LogicaNegocio`. No accedas directamente a la base de datos salvo para crear/inyectar la conexión. Añade pruebas de integración de ambas rutas.
 
 ## Criterio de aceptación
 

@@ -6,7 +6,7 @@ Consultar el archivo correspondiente de `doc/` antes de generar implementación.
 
 ## Prompt de trabajo
 
-> A partir de `bd_database_design.md`, genera el SQL mínimo para MySQL/MariaDB de la tabla `Mediciones`. Debe tener `id` autoincremental, `fecha` con `CURRENT_TIMESTAMP`, `tipo` y `valor`. No añadas major/minor ni campos que no estén en el diseño. No incluyas credenciales.
+> A partir de `database_design.md`, genera el SQL mínimo para MySQL/MariaDB de la tabla `Mediciones`. Debe tener `id` autoincremental, `fecha` con `CURRENT_TIMESTAMP`, `tipo` y `valor`. No añadas major/minor ni campos que no estén en el diseño. No incluyas credenciales.
 
 ## Criterio de aceptación
 

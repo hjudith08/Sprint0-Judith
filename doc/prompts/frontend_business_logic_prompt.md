@@ -2,7 +2,7 @@
 
 ## Diseño de entrada
 
-Consultar `doc/web_frontend_business_logic_design.md` y `doc/web_design.md`.
+Consultar `doc/frontend_business_logic_design.md` y `doc/web_design.md`.
 
 ## Prompt de trabajo
 
@@ -14,4 +14,4 @@ Consultar `doc/web_frontend_business_logic_design.md` y `doc/web_design.md`.
 
 ## Revisión del resultado
 
-Se compara la implementación con el diseño y se ejecuta `node src/web/test_logica_fake.js`.
+Se compara la implementación con el diseño y se ejecuta `node src/frontend_business_logic/tests/LogicaFakeTest.js`.

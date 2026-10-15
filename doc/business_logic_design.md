@@ -3,7 +3,7 @@
 ## 1. Diseño del Componente
 
 Este documento es la especificación canónica de la **lógica de negocio** del backend.
-El prefijo `logica` identifica directamente su implementación en `src/logica/`.
+El prefijo `logica` identifica directamente su implementación en `src/business_logic/`.
 
 Este componente es independiente de HTTP, rutas, códigos de estado, cabeceras, sockets y
 cualquier otro mecanismo de transporte.
@@ -43,14 +43,14 @@ resultado: ResultadoOperacion <--
 - `guardarMedicion()` valida antes de insertar.
 - `obtenerUltimaMedicion()` recupera la medición con el `id` más alto.
 - Si no existen mediciones, devuelve la colección vacía prevista por la implementación.
-- La persistencia está alineada con `bd_database_design.md`.
+- La persistencia está alineada con `database_design.md`.
 - Los detalles BLE no forman parte de la lógica de negocio.
-- No existen dependencias desde `src/logica/` hacia `src/rest/`.
-- La implementación correspondiente está en `src/logica/`.
+- No existen dependencias desde `src/business_logic/` hacia `src/communication/`.
+- La implementación correspondiente está en `src/business_logic/`.
 
 ## 3. Reglas Generales
 
 - **Lenguaje de programación:** PHP.
 - **Encabezados de funciones/métodos:** cada función o método debe incluir su diseño lógico en un bloque delimitado por líneas `--------------------`.
 - **Legibilidad del código:** la lógica debe ser clara, de dominio y desacoplada del transporte.
-- **Pruebas automatizadas:** `src/logica/test_logica.php` comprueba validación, persistencia y recuperación.
+- **Pruebas automatizadas:** `src/business_logic/test_logica.php` comprueba validación, persistencia y recuperación.
