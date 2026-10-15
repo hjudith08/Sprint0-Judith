@@ -295,6 +295,79 @@ Communication
 
 La GUI no realiza directamente la comunicación HTTP.
 
+## Despliegue
+
+### Microprocesador
+
+El código del microprocesador se encuentra en:
+
+```text
+src/microprocesador/HolaMundoIBeacon/
+```
+
+Se carga en la SparkFun Pro nRF52840 Mini mediante Arduino IDE con las librerías necesarias para BLE.
+
+### Android
+
+El proyecto Android se encuentra en:
+
+```text
+src/android/
+```
+
+Se abre con Android Studio, se compila y se instala en un dispositivo Android con Bluetooth habilitado.
+
+La aplicación debe disponer de los permisos Bluetooth necesarios para detectar el iBeacon `JU-GTI`.
+
+### Base de datos
+
+La tabla necesaria se crea ejecutando:
+
+```text
+src/database/crear_tabla.sql
+```
+
+sobre una base de datos MySQL/MariaDB.
+
+### Backend
+
+Los componentes:
+
+```text
+src/business_logic/
+src/communication/
+```
+
+se despliegan en un servidor con PHP y acceso a la base de datos.
+
+En el despliegue utilizado durante el Sprint 0, el API REST se encuentra en:
+
+```text
+https://jcivapo.upv.edu.es/rest/index.php
+```
+
+### Web
+
+La interfaz web se encuentra en:
+
+```text
+src/web/
+```
+
+Debe publicarse junto con:
+
+```text
+src/frontend_business_logic/
+```
+
+para que `index.html` pueda cargar `LogicaFake.js`.
+
+La página obtiene la última medición mediante:
+
+```text
+GET /mediciones/ultima
+```
+
 ## Pruebas
 
 ### Business Logic
@@ -349,7 +422,7 @@ errores HTTP
 
 ### Android
 
-Los tests pueden ejecutarse desde Android Studio o mediante Gradle desde el proyecto Android.
+Los tests pueden ejecutarse desde Android Studio o mediante Gradle desde la raíz del proyecto Android.
 
 En Windows:
 
