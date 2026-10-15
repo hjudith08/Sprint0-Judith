@@ -34,7 +34,7 @@ class LogicaFake {
         ninguna
 
     Salida:
-        Medicion | null
+        [Medicion]
     ----------------------------------------------------
     */
 
