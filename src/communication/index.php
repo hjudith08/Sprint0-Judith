@@ -10,7 +10,7 @@
 // Aportación: implementación de POST /mediciones, GET /mediciones/ultima y validación de
 //             entrada.
 // --------------------------------------------------------------
-require_once __DIR__ . '/../logica/LogicaNegocio.php';
+require_once __DIR__ . '/../business_logic/LogicaNegocio.php';
 
 header(
     'Content-Type: application/json; charset=utf-8'

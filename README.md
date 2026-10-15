@@ -58,10 +58,11 @@ El valor nace en Arduino, se codifica en la trama iBeacon, Android lo recibe y l
 ├── src/
 │   ├── android/
 │   ├── arduino/
-│   ├── bd/
-│   ├── logica/
-│   ├── rest/
+│   ├── business_logic/
+│   ├── communication/
+│   ├── database/
 │   └── web/
+├── tests/
 ├── author.md
 └── README.md
 ```
