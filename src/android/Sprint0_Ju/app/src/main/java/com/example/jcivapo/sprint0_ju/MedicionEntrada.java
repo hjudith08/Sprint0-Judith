@@ -4,6 +4,7 @@
 // Copyright: material académico y modificaciones del autor.
 // Fecha de adaptación: 05-10-2026
 // Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell
 // Aportación: definición de los campos tipo y valor usados en la comunicación con el REST.
 // --------------------------------------------------------------
 package com.example.jcivapo.sprint0_ju;
