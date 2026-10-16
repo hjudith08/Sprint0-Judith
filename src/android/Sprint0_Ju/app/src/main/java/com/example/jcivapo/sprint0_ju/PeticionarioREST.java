@@ -5,6 +5,7 @@
 // Copyright: material académico y modificaciones del autor.
 // Fecha de adaptación: 05-10-2026
 // Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell
 // Aportación: comunicación Android -> REST mediante HttpURLConnection.
 // --------------------------------------------------------------
 package com.example.jcivapo.sprint0_ju;
