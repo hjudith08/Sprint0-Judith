@@ -6,6 +6,7 @@
 // Copyright: material académico y modificaciones del autor.
 // Fecha de adaptación: 06-10-2026
 // Autora de la adaptación: Judith Civico Aporta
+// Autor original: Jordi Bataller i Mascarell
 // Aportación: adaptación BLE para Android actual,
 //             diagnóstico de escaneo e integración BLE -> REST.
 // --------------------------------------------------------------
